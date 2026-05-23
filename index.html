@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>CardCraft Pro - Premium Business Card Maker</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&family=Lato:wght@300;400;700&family=Open+Sans:wght@300;400;600;700&family=Raleway:wght@300;400;500;600;700&family=Oswald:wght@300;400;500;600;700&family=Bebas+Neue&family=Pacifico&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+  --primary:#6366f1;--primary-dark:#4f46e5;--secondary:#ec4899;--accent:#f59e0b;
+  --bg1:#0f172a;--bg2:#1e293b;--bg3:#334155;--text1:#f1f5f9;--text2:#94a3b8;
+  --border:#334155;--radius:12px;--radius-lg:16px;--tr:all .25s ease;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Poppins',sans-serif;background:var(--bg1);color:var(--text1);line-height:1.6;overflow-x:hidden;}
+.container{max-width:1400px;margin:0 auto;padding:0 20px;}
+a{text-decoration:none;color:inherit;}
+
+/* ── HEADER ── */
+.hdr{position:fixed;top:0;left:0;right:0;z-index:900;background:rgba(15,23,42,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:14px 0;}
+.hdr .container{display:flex;align-items:center;justify-content:space-between;}
+.logo{display:flex;align-items:center;gap:10px;font-size:1.4rem;font-weight:700;}
+.logo i{color:var(--primary);font-size:1.6rem;}
+.main-nav{display:flex;gap:28px;}
+.main-nav a{font-weight:500;color:var(--text2);transition:var(--tr);}
+.main-nav a:hover,.main-nav a.active{color:var(--text1);}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:120px 20px 80px;
+  background:radial-gradient(ellipse at 20% 50%,rgba(99,102,241,.15) 0%,transparent 50%),
+             radial-gradient(ellipse at 80% 50%,rgba(236,72,153,.1) 0%,transparent 50%),var(--bg1);}
+.hero-content{text-align:center;max-width:800px;}
+.hero-content h1{font-size:clamp(2.4rem,6vw,4.2rem);font-weight:800;line-height:1.1;margin-bottom:20px;}
+.hl{background:linear-gradient(135deg,var(--primary),var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-sub{font-size:clamp(.95rem,2vw,1.2rem);color:var(--text2);margin-bottom:36px;}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:var(--radius);font-weight:600;font-size:.95rem;transition:var(--tr);border:2px solid transparent;cursor:pointer;font-family:inherit;}
+.btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;box-shadow:0 0 20px rgba(99,102,241,.3);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 30px rgba(99,102,241,.5);}
+.btn-outline{background:transparent;color:var(--text1);border-color:var(--border);}
+.btn-outline:hover{border-color:var(--primary);color:var(--primary);}
+.btn-success{background:#10b981;color:#fff;}
+.btn-success:hover{background:#059669;}
+.btn-warn{background:var(--accent);color:#fff;}
+.btn-warn:hover{background:#d97706;}
+
+/* ── TEMPLATES SECTION ── */
+.cat-section{padding:80px 0 36px;background:var(--bg2);}
+.sec-title{text-align:center;font-size:clamp(1.7rem,4vw,2.4rem);font-weight:700;margin-bottom:10px;}
+.sec-sub{text-align:center;color:var(--text2);margin-bottom:36px;font-size:1.05rem;}
+.cat-filters{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;padding:0 20px;}
+.cat-btn{display:flex;align-items:center;gap:7px;padding:10px 20px;border-radius:50px;background:var(--bg1);color:var(--text2);font-weight:500;border:2px solid var(--border);transition:var(--tr);cursor:pointer;font-family:inherit;font-size:.9rem;}
+.cat-btn:hover{border-color:var(--primary);color:var(--text1);}
+.cat-btn.active{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;border-color:transparent;box-shadow:0 0 18px rgba(99,102,241,.3);}
+.tpl-gallery{padding:36px 0 80px;background:var(--bg2);}
+.tpl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:26px;padding:0 20px;}
+.tpl-card{background:var(--bg1);border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--border);transition:var(--tr);cursor:pointer;animation:fadeUp .4s ease forwards;opacity:0;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.tpl-card:hover{transform:translateY(-8px);border-color:var(--primary);box-shadow:0 20px 40px rgba(0,0,0,.3),0 0 20px rgba(99,102,241,.2);}
+.tpl-preview{width:100%;height:190px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.tpl-overlay{position:absolute;inset:0;background:rgba(15,23,42,.88);display:flex;align-items:center;justify-content:center;opacity:0;transition:var(--tr);}
+.tpl-card:hover .tpl-overlay{opacity:1;}
+.btn-use{padding:11px 24px;background:var(--primary);color:#fff;border-radius:var(--radius);font-weight:600;border:none;cursor:pointer;font-family:inherit;transform:translateY(10px);transition:var(--tr);}
+.tpl-card:hover .btn-use{transform:translateY(0);}
+.tpl-info{padding:16px 20px;}
+.tpl-info h3{font-size:1rem;font-weight:600;margin-bottom:6px;}
+.tpl-info p{color:var(--text2);font-size:.85rem;margin-bottom:10px;}
+.tpl-tags{display:flex;gap:6px;flex-wrap:wrap;}
+.tpl-tag{padding:3px 10px;background:rgba(99,102,241,.1);color:var(--primary);border-radius:6px;font-size:.72rem;font-weight:500;}
+
+/* ── EDITOR OVERLAY ── */
+.editor-sec{position:fixed;inset:0;z-index:2000;background:var(--bg1);display:none;flex-direction:column;}
+.editor-sec.open{display:flex;}
+.editor-wrap{display:grid;grid-template-columns:360px 1fr 300px;height:100vh;overflow:hidden;}
+
+/* Panels */
+.ep{display:flex;flex-direction:column;overflow-y:auto;}
+.ep-left{background:var(--bg2);border-right:1px solid var(--border);}
+.ep-right{background:var(--bg2);border-left:1px solid var(--border);}
+.ph{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border);background:var(--bg1);position:sticky;top:0;z-index:10;}
+.ph h3{display:flex;align-items:center;gap:8px;font-size:1rem;font-weight:600;}
+.ph h3 i{color:var(--primary);}
+.close-btn{width:34px;height:34px;border-radius:50%;background:var(--bg2);border:1px solid var(--border);color:var(--text2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--tr);}
+.close-btn:hover{background:rgba(236,72,153,.2);border-color:var(--secondary);color:var(--secondary);}
+
+/* Form elements */
+.form-secs{padding:16px 20px 80px;}
+.fsec{margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:20px;}
+.fsec h4{font-size:.82rem;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--text2);margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+.fsec h4 i{color:var(--primary);}
+.fg{margin-bottom:10px;}
+.fg label{display:block;font-size:.8rem;font-weight:500;color:var(--text2);margin-bottom:5px;}
+.fg input[type=text],.fg input[type=tel],.fg input[type=email],.fg textarea,.fg select{
+  width:100%;padding:9px 12px;background:var(--bg1);border:2px solid var(--border);border-radius:10px;
+  color:var(--text1);font-family:inherit;font-size:.85rem;transition:var(--tr);}
+.fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--primary);outline:none;}
+.fg textarea{resize:vertical;min-height:56px;}
+.fg input[type=range]{width:100%;accent-color:var(--primary);}
+.fg input[type=color]{width:44px;height:36px;border:none;background:none;cursor:pointer;border-radius:8px;padding:0;}
+.range-row{display:flex;align-items:center;gap:10px;}
+.range-row span{font-size:.8rem;color:var(--text2);min-width:30px;text-align:right;}
+
+.upload-box{border:2px dashed var(--border);border-radius:10px;padding:16px;text-align:center;cursor:pointer;transition:var(--tr);background:var(--bg1);}
+.upload-box:hover{border-color:var(--primary);background:rgba(99,102,241,.05);}
+.upload-box i{font-size:1.5rem;color:var(--text2);display:block;margin-bottom:6px;}
+.upload-box span{font-size:.8rem;color:var(--text2);}
+.upload-box.has-img{border-color:var(--primary);}
+
+.tog{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.85rem;color:var(--text2);margin-bottom:8px;padding:6px 8px;border-radius:8px;transition:var(--tr);}
+.tog:hover{background:rgba(99,102,241,.08);color:var(--text1);}
+.tog input[type=checkbox]{width:16px;height:16px;accent-color:var(--primary);}
+
+.layout-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.layout-btn{padding:9px;border-radius:var(--radius);background:var(--bg1);color:var(--text2);font-size:.83rem;font-weight:500;border:2px solid var(--border);transition:var(--tr);cursor:pointer;font-family:inherit;}
+.layout-btn.active{border-color:var(--primary);color:var(--primary);background:rgba(99,102,241,.1);}
+
+.size-group{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.size-input-wrap label{font-size:.75rem;color:var(--text2);display:block;margin-bottom:4px;}
+.size-input-wrap input{width:100%;padding:7px 10px;background:var(--bg1);border:2px solid var(--border);border-radius:8px;color:var(--text1);font-family:inherit;font-size:.85rem;}
+
+/* Center preview area */
+.ep-center{display:flex;flex-direction:column;background:var(--bg1);position:relative;}
+.prev-top{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--border);background:var(--bg2);flex-wrap:wrap;gap:10px;}
+.prev-title{font-size:.85rem;font-weight:600;display:flex;align-items:center;gap:8px;color:var(--text2);}
+.prev-controls{display:flex;gap:4px;}
+.prev-btn{padding:6px 14px;border-radius:6px;font-size:.82rem;font-weight:500;color:var(--text2);background:transparent;transition:var(--tr);border:none;cursor:pointer;font-family:inherit;}
+.prev-btn.active{background:var(--primary);color:#fff;}
+.prev-area{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px;overflow:auto;}
+.card-wrap{position:relative;display:inline-block;}
+.business-card{background:#fff;border-radius:12px;box-shadow:0 25px 50px -12px rgba(0,0,0,.35);position:relative;overflow:hidden;transform-style:preserve-3d;}
+
+/* Drag & Drop Styles */
+.drag-element{position:absolute;cursor:move;user-select:none;box-sizing:border-box;}
+.drag-element.dragging-now{outline:2px dashed var(--primary);background:rgba(99,102,241,0.05);}
+.drag-element:hover{outline:1px dashed rgba(99,102,241,0.5);}
+.drag-element:hover .drag-handle{opacity:1;}
+.drag-handle{position:absolute;top:-18px;left:50%;transform:translateX(-50%);background:var(--primary);color:#fff;font-size:8px;padding:1px 4px;border-radius:3px;opacity:0;transition:.2s;white-space:nowrap;pointer-events:none;z-index:99;}
+
+.prev-footer{padding:12px 20px;border-top:1px solid var(--border);background:var(--bg2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.prev-info{display:flex;gap:16px;color:var(--text2);font-size:.78rem;}
+.prev-info span{display:flex;align-items:center;gap:5px;}
+.dl-btns{display:flex;gap:8px;}
+
+/* Effects classes */
+.effect-3d{transform:perspective(1000px) rotateX(4deg) rotateY(-4deg);}
+.effect-gra{background-size:200% 200%!important;animation:gradAnim 4s ease infinite;}
+@keyframes gradAnim{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.effect-shine::after{content:'';position:absolute;top:0;left:-100%;width:40%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);animation:shine 3.5s infinite;}
+@keyframes shine{0%{left:-100%}100%{left:200%}}
+.effect-pulse{animation:pulse 2.5s ease-in-out infinite;}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.015)}}
+.effect-float{animation:flt 3.5s ease-in-out infinite;}
+@keyframes flt{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+/* Inner elements */
+.c-item{display:flex;align-items:center;gap:6px;margin:2px 0;white-space:nowrap;}
+.c-item i{width:14px;text-align:center;flex-shrink:0;}
+.qr-box{background:#fff;border-radius:6px;padding:4px;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.1);}
+.social-bar{display:flex;gap:6px;flex-wrap:wrap;}
+.soc-icon{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;color:#fff;flex-shrink:0;}
+.soc-icon.wa{background:#25d366}.soc-icon.li{background:#0077b5}.soc-icon.ig{background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)}.soc-icon.fb{background:#1877f2}.soc-icon.tw{background:#1da1f2}.soc-icon.yt{background:red}
+
+/* Custom Panel */
+.csecs{padding:16px 20px 80px;}
+.csec{margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:20px;}
+.csec h4{font-size:.82rem;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--text2);margin-bottom:12px;}
+.csec select{width:100%;padding:9px 12px;background:var(--bg1);border:2px solid var(--border);border-radius:10px;color:var(--text1);font-family:inherit;}
+
+/* Features & Loading */
+.feat-sec{padding:90px 0;background:var(--bg1);}
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:26px;padding:0 20px;}
+.feat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:36px 26px;text-align:center;}
+.feat-card i{font-size:2.2rem;color:var(--primary);margin-bottom:16px;}
+.feat-card h3{font-size:1.1rem;font-weight:600;margin-bottom:10px;}
+.feat-card p{color:var(--text2);font-size:.9rem;}
+
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:36px 0;text-align:center;}
+footer p{color:var(--text2);font-size:.88rem;}
+
+.loading{position:fixed;inset:0;background:rgba(15,23,42,.97);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;z-index:9999;opacity:0;visibility:hidden;transition:var(--tr);}
+.loading.on{opacity:1;visibility:visible;}
+.spin-box{text-align:center;}
+.spin-box i{font-size:2.8rem;color:var(--primary);margin-bottom:14px;display:block;}
+
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:var(--bg1);}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+
+@media(max-width:900px){
+  .editor-wrap{grid-template-columns:1fr;grid-template-rows:auto 1fr auto;height:auto;}
+  .ep-left,.ep-right{max-height:350px;}
+  .ep-center{min-height:420px;}
+  .editor-sec{overflow-y:auto;}
+}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="container">
+    <div class="logo"><i class="fas fa-id-card"></i><span>CardCraft Pro</span></div>
+    <nav class="main-nav">
+      <a href="#home" class="active">Home</a>
+      <a href="#templates">Templates</a>
+      <a href="#features">Features</a>
+    </nav>
+  </div>
+</header>
+
+<section id="home" class="hero">
+  <div class="hero-content">
+    <h1>Create Stunning <span class="hl">Business Cards</span></h1>
+    <p class="hero-sub">45 Premium Templates · Free · Unlimited · No Interference</p>
+    <button class="btn btn-primary" onclick="scrollToTemplates()"><i class="fas fa-magic"></i> Start Creating</button>
+  </div>
+</section>
+
+<section id="templates" class="cat-section">
+  <div class="container">
+    <h2 class="sec-title">Choose Your Template</h2>
+    <p class="sec-sub">9 Categories × 5 Designs = 45 Premium Templates</p>
+    <div class="cat-filters">
+      <button class="cat-btn active" onclick="filterTpl('all',this)"><i class="fas fa-th-large"></i> All</button>
+      <button class="cat-btn" onclick="filterTpl('shop',this)"><i class="fas fa-store"></i> Shop</button>
+      <button class="cat-btn" onclick="filterTpl('doctor',this)"><i class="fas fa-user-md"></i> Doctor</button>
+      <button class="cat-btn" onclick="filterTpl('education',this)"><i class="fas fa-graduation-cap"></i> Education</button>
+      <button class="cat-btn" onclick="filterTpl('corporate',this)"><i class="fas fa-building"></i> Corporate</button>
+      <button class="cat-btn" onclick="filterTpl('minimal',this)"><i class="fas fa-minus"></i> Minimal</button>
+      <button class="cat-btn" onclick="filterTpl('luxury',this)"><i class="fas fa-gem"></i> Luxury</button>
+      <button class="cat-btn" onclick="filterTpl('modern',this)"><i class="fas fa-rocket"></i> Modern</button>
+      <button class="cat-btn" onclick="filterTpl('creative',this)"><i class="fas fa-palette"></i> Creative</button>
+      <button class="cat-btn" onclick="filterTpl('vertical',this)"><i class="fas fa-arrows-alt-v"></i> Vertical</button>
+    </div>
+  </div>
+</section>
+
+<section class="tpl-gallery">
+  <div class="container">
+    <div class="tpl-grid" id="tplGrid"></div>
+  </div>
+</section>
+
+<section class="editor-sec" id="editorSec">
+  <div class="editor-wrap">
+
+    <div class="ep ep-left">
+      <div class="ph">
+        <h3><i class="fas fa-edit"></i> Information Tools</h3>
+        <button class="close-btn" onclick="closeEditor()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="form-secs">
+        <div class="fsec">
+          <h4><i class="fas fa-user"></i> Identity</h4>
+          <div class="fg"><label>Full Name</label><input type="text" id="iName" placeholder="John Doe" oninput="updateCard()"></div>
+          <div class="fg"><label>Job Title</label><input type="text" id="iTitle" placeholder="Managing Director" oninput="updateCard()"></div>
+          <div class="fg"><label>Company Name</label><input type="text" id="iCompany" placeholder="Global Industries" oninput="updateCard()"></div>
+        </div>
+        <div class="fsec">
+          <h4><i class="fas fa-phone-alt"></i> Communications</h4>
+          <div class="fg"><label>Phone Number</label><input type="tel" id="iPhone" placeholder="+1 (555) 019-2834" oninput="updateCard()"></div>
+          <div class="fg"><label>Email Address</label><input type="email" id="iEmail" placeholder="john@domain.com" oninput="updateCard()"></div>
+          <div class="fg"><label>Website Link</label><input type="text" id="iWeb" placeholder="www.domain.com" oninput="updateCard()"></div>
+          <div class="fg"><label>Office Address</label><textarea id="iAddr" rows="2" placeholder="789 Innovators Ave, Silicon Valley" oninput="updateCard()"></textarea></div>
+        </div>
+        <div class="fsec">
+          <h4><i class="fas fa-hashtag"></i> Social Presence</h4>
+          <div class="fg"><label><i class="fab fa-whatsapp"></i> WhatsApp</label><input type="text" id="iWA" placeholder="+15550192834" oninput="updateCard()"></div>
+          <div class="fg"><label><i class="fab fa-linkedin"></i> LinkedIn</label><input type="text" id="iLI" placeholder="linkedin.com/in/user" oninput="updateCard()"></div>
+          <div class="fg"><label><i class="fab fa-instagram"></i> Instagram</label><input type="text" id="iIG" placeholder="@username" oninput="updateCard()"></div>
+          <div class="fg"><label><i class="fab fa-facebook"></i> Facebook</label><input type="text" id="iFB" placeholder="facebook.com/page" oninput="updateCard()"></div>
+          <div class="fg"><label><i class="fab fa-twitter"></i> Twitter / X</label><input type="text" id="iTW" placeholder="@handle" oninput="updateCard()"></div>
+          <div class="fg"><label><i class="fab fa-youtube"></i> YouTube</label><input type="text" id="iYT" placeholder="youtube.com/c/channel" oninput="updateCard()"></div>
+        </div>
+        <div class="fsec">
+          <h4><i class="fas fa-qrcode"></i> Graphics & QR Generator</h4>
+          <div class="fg">
+            <label>Brand Logo Image</label>
+            <div class="upload-box" id="logoBox" onclick="document.getElementById('logoFile').click()">
+              <input type="file" id="logoFile" accept="image/*" style="display:none" onchange="handleLogo(event)">
+              <i class="fas fa-image"></i><span id="logoBoxText">Upload PNG/JPG Logo</span>
+            </div>
+          </div>
+          <div class="fg">
+            <label>Logo Scaler</label>
+            <div class="range-row"><input type="range" id="logoSize" min="25" max="110" value="55" oninput="updateCard();document.getElementById('logoSizeV').textContent=this.value+'px'"><span id="logoSizeV">55px</span></div>
+          </div>
+          <div class="fg">
+            <label>Auto QR Core Content</label>
+            <select id="qrType" onchange="toggleQRCustom();updateCard()">
+              <option value="none">Deactivated (None)</option>
+              <option value="website" selected>Live Website URL</option>
+              <option value="vcard">Full Profile vCard Contact</option>
+              <option value="custom">Manual Custom Text</option>
+            </select>
+          </div>
+          <div class="fg" id="qrCustomGroup" style="display:none">
+            <label>Manual Content Data</label>
+            <input type="text" id="qrCustom" placeholder="Type URL or string..." oninput="updateCard()">
+          </div>
+          <div class="fg">
+            <label>QR Component Size</label>
+            <div class="range-row"><input type="range" id="qrSize" min="35" max="130" value="65" oninput="updateCard();document.getElementById('qrSizeV').textContent=this.value+'px'"><span id="qrSizeV">65px</span></div>
+          </div>
+          <div class="fg">
+            <label>Or Upload Custom QR Image instead</label>
+            <div class="upload-box" id="qrBox" onclick="document.getElementById('qrFile').click()">
+              <input type="file" id="qrFile" accept="image/*" style="display:none" onchange="handleQR(event)">
+              <i class="fas fa-qrcode"></i><span id="qrBoxText">Upload custom QR graphic</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ep ep-center">
+      <div class="prev-top">
+        <div class="prev-title"><i class="fas fa-desktop"></i> Canvas Matrix</div>
+        <div class="prev-controls">
+          <button class="prev-btn active" id="btnSideFront" onclick="switchSideView('front')">FRONT SIDE</button>
+          <button class="prev-btn" id="btnSideBack" onclick="switchSideView('back')">BACK SIDE</button>
+        </div>
+        <div>
+          <button class="btn btn-outline" style="padding:6px 14px;font-size:.8rem;" onclick="toggleDragEngine()" id="dragToggleBtn">
+            <i class="fas fa-arrows-alt"></i> <span id="dragToggleText">Drag Mode: OFF</span>
+          </button>
+        </div>
+      </div>
+      <div class="prev-area" id="prevArea">
+        <div class="card-wrap" id="cardWrap">
+          <div class="business-card" id="businessCard"></div>
+        </div>
+      </div>
+      <div class="prev-footer">
+        <div class="prev-info">
+          <span><i class="fas fa-expand"></i> 3.5" x 2.0" Aspect</span>
+          <span><i class="fas fa-check-circle"></i> Vector Render Clean</span>
+        </div>
+        <div class="dl-btns">
+          <button class="btn btn-primary" onclick="downloadPNG()"><i class="fas fa-file-image"></i> <span>PNG</span></button>
+          <button class="btn btn-warn" onclick="downloadPDF()"><i class="fas fa-file-pdf"></i> <span>PDF</span></button>
+          <button class="btn btn-success" onclick="downloadZIP()"><i class="fas fa-file-archive"></i> <span>All ZIP</span></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="ep ep-right">
+      <div class="ph">
+        <h3><i class="fas fa-sliders-h"></i> Configuration</h3>
+      </div>
+      <div class="csecs">
+        <div class="csec">
+          <h4>Global Dimensions</h4>
+          <div class="size-group">
+            <div class="size-input-wrap"><label>Width (px)</label><input type="number" id="cardW" value="525" min="250" max="900" oninput="changeCardDimension()"></div>
+            <div class="size-input-wrap"><label>Height (px)</label><input type="number" id="cardH" value="300" min="150" max="600" oninput="changeCardDimension()"></div>
+          </div>
+        </div>
+
+        <div class="csec" style="background: rgba(99,102,241,0.04); padding: 10px; border-radius: 8px;">
+          <p style="font-size: 0.75rem; font-weight: 700; color: var(--primary); text-transform: uppercase; margin-bottom: 8px;">
+            <i class="fas fa-layer-group"></i> Modifying: <span id="targetSideLabel" style="text-decoration: underline;">Front Side</span> Settings Only
+          </p>
+        </div>
+
+        <div class="csec">
+          <h4>Active Side Canvas Base</h4>
+          <div class="fg">
+            <label>Background Color</label>
+            <input type="color" id="bgColor" value="#ffffff" onchange="pushSideConfig('bgColor', this.value)">
+          </div>
+          <div class="fg">
+            <label>Background Image File</label>
+            <div class="upload-box" id="bgBox" onclick="document.getElementById('bgFile').click()">
+              <input type="file" id="bgFile" accept="image/*" style="display:none" onchange="handleSideBG(event)">
+              <i class="fas fa-photo-video"></i><span id="bgBoxText">Upload Backdrop</span>
+            </div>
+            <button id="removeBgBtn" onclick="clearSideBG()" style="display:none;margin-top:6px;width:100%;padding:6px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);color:#ef4444;border-radius:6px;font-size:0.75rem;cursor:pointer;">Remove Image</button>
+          </div>
+          <div class="fg">
+            <label>Backdrop Opacity</label>
+            <div class="range-row"><input type="range" id="bgOpacity" min="10" max="100" value="100" oninput="pushSideConfig('bgOpacity', this.value);document.getElementById('bgOpacityV').textContent=this.value+'%'"><span id="bgOpacityV">100%</span></div>
+          </div>
+        </div>
+
+        <div class="csec">
+          <h4>Name Typography</h4>
+          <div class="fg"><label>Font Family</label><select id="nameFont" onchange="pushSideConfig('nameFont', this.value)"></select></div>
+          <div class="fg"><label>Font Size</label><div class="range-row"><input type="range" id="nameSize" min="12" max="38" value="22" oninput="pushSideConfig('nameSize', this.value);document.getElementById('nameSizeV').textContent=this.value+'px'"><span id="nameSizeV">22px</span></div></div>
+          <div class="fg"><label>Color hex</label><input type="color" id="nameColor" value="#1e293b" onchange="pushSideConfig('nameColor', this.value)"></div>
+        </div>
+
+        <div class="csec">
+          <h4>Designation Title</h4>
+          <div class="fg"><label>Font Family</label><select id="titleFont" onchange="pushSideConfig('titleFont', this.value)"></select></div>
+          <div class="fg"><label>Font Size</label><div class="range-row"><input type="range" id="titleSize" min="10" max="26" value="13" oninput="pushSideConfig('titleSize', this.value);document.getElementById('titleSizeV').textContent=this.value+'px'"><span id="titleSizeV">13px</span></div></div>
+          <div class="fg"><label>Color hex</label><input type="color" id="titleColor" value="#64748b" onchange="pushSideConfig('titleColor', this.value)"></div>
+        </div>
+
+        <div class="csec">
+          <h4>Communications Block</h4>
+          <div class="fg"><label>Font Family</label><select id="contactFont" onchange="pushSideConfig('contactFont', this.value)"></select></div>
+          <div class="fg"><label>Font Size</label><div class="range-row"><input type="range" id="contactSize" min="8" max="18" value="11" oninput="pushSideConfig('contactSize', this.value);document.getElementById('contactSizeV').textContent=this.value+'px'"><span id="contactSizeV">11px</span></div></div>
+          <div class="fg"><label>Color hex</label><input type="color" id="contactColor" value="#334155" onchange="pushSideConfig('contactColor', this.value)"></div>
+        </div>
+
+        <div class="csec">
+          <h4>Theme Color Branding</h4>
+          <div class="fg"><label>Accent Elements</label><input type="color" id="accentColor" value="#4f46e5" onchange="pushSideConfig('accentColor', this.value)"></div>
+          <div class="fg"><label>Icons Accent</label><input type="color" id="iconColor" value="#4f46e5" onchange="pushSideConfig('iconColor', this.value)"></div>
+        </div>
+
+        <div class="csec">
+          <h4>Card Framing Border</h4>
+          <div class="fg"><label>Border Thickness</label><div class="range-row"><input type="range" id="borderWidth" min="0" max="15" value="0" oninput="pushSideConfig('borderWidth', this.value);document.getElementById('borderWidthV').textContent=this.value+'px'"><span id="borderWidthV">0px</span></div></div>
+          <div class="fg"><label>Border Color</label><input type="color" id="borderColor" value="#475569" onchange="pushSideConfig('borderColor', this.value)"></div>
+          <div class="fg"><label>Border Pattern</label>
+            <select id="borderStyle" onchange="pushSideConfig('borderStyle', this.value)">
+              <option value="solid">Solid</option><option value="dashed">Dashed</option>
+              <option value="dotted">Dotted</option><option value="double">Double</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="csec">
+          <h4>Visual Structural FX</h4>
+          <label class="tog"><input type="checkbox" id="efShadow" checked onchange="pushSideConfig('efShadow', this.checked)"> Enable Drop Shadow</label>
+          <label class="tog"><input type="checkbox" id="efRound" checked onchange="pushSideConfig('efRound', this.checked)"> Rounded Edges</label>
+          <label class="tog"><input type="checkbox" id="ef3D" onchange="pushSideConfig('ef3D', this.checked)"> Isometric 3D Angle</label>
+          <label class="tog"><input type="checkbox" id="efGrad" onchange="pushSideConfig('efGrad', this.checked)"> Animated Gradient Background</label>
+          <label class="tog"><input type="checkbox" id="efShine" onchange="pushSideConfig('efShine', this.checked)"> Continuous Light Metallic Shine</label>
+          <label class="tog"><input type="checkbox" id="efPulse" onchange="pushSideConfig('efPulse', this.checked)"> Micro Pulse scaling</label>
+          <label class="tog"><input type="checkbox" id="efFloat" onchange="pushSideConfig('efFloat', this.checked)"> Vertical Floating animation</label>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="features" class="feat-sec">
+  <div class="container">
+    <h2 class="sec-title">Engineered For Isolation</h2>
+    <p class="sec-sub">Advanced individual node adjustments</p>
+    <div class="feat-grid">
+      <div class="feat-card"><i class="fas fa-arrows-alt"></i><h3>QR & Item Drag</h3><p>Move QR, Logo, and individual nodes with precise absolute coordinates safely.</p></div>
+      <div class="feat-card"><i class="fas fa-layer-group"></i><h3>Independent Sides</h3><p>Modify backgrounds, typography styles & elements on front or back without cross-contamination.</p></div>
+      <div class="feat-card"><i class="fas fa-bolt"></i><h3>No Blur Rendering</h3><p>Outputs clean 300 DPI exports optimized for printing presses.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container"><p>© 2026 CardCraft Pro — Independent Dual Side Engine Enabled.</p></div>
+</footer>
+
+<div class="loading" id="loadingOverlay">
+  <div class="spin-box"><i class="fas fa-spinner fa-spin"></i><span id="loadingMsg">Processing...</span></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+
+const FONTS_LIST = ['Poppins','Playfair Display','Montserrat','Roboto','Lato','Open Sans','Raleway','Oswald','Bebas Neue','Pacifico'];
+
+// ── TEMPLATES ARRAYS ──
+const TEMPLATES = [
+  {id:'shop-1',cat:'shop',name:'Modern Retailer',icon:'fa-store',layout:'standard',accent:'#f97316'},
+  {id:'shop-2',cat:'shop',name:'Boutique Dark',icon:'fa-shopping-bag',layout:'classic',accent:'#f59e0b'},
+  {id:'shop-3',cat:'shop',name:'Neon Counter',icon:'fa-store-alt',layout:'split',accent:'#ec4899'},
+  {id:'shop-4',cat:'shop',name:'Minimal Cart',icon:'fa-shopping-cart',layout:'centered',accent:'#8b5cf6'},
+  {id:'shop-5',cat:'shop',name:'Gradient Depot',icon:'fa-tags',layout:'modern',accent:'#06b6d4'},
+  
+  {id:'doc-1',cat:'doctor',name:'Medical Blue',icon:'fa-user-md',layout:'standard',accent:'#0284c7'},
+  {id:'doc-2',cat:'doctor',name:'Clinical Clean',icon:'fa-clinic-medical',layout:'classic',accent:'#10b981'},
+  {id:'doc-3',cat:'doctor',name:'Dental Care',icon:'fa-tooth',layout:'split',accent:'#06b6d4'},
+  {id:'doc-4',cat:'doctor',name:'Heart Pulse',icon:'fa-heartbeat',layout:'centered',accent:'#ef4444'},
+  {id:'doc-5',cat:'doctor',name:'Pharma Plus',icon:'fa-file-medical',layout:'modern',accent:'#f59e0b'},
+
+  {id:'edu-1',cat:'education',name:'Academy Classic',icon:'fa-graduation-cap',layout:'classic',accent:'#1e3a8a'},
+  {id:'edu-2',cat:'education',name:'Campus Modern',icon:'fa-university',layout:'standard',accent:'#3b82f6'},
+  {id:'edu-3',cat:'education',name:'E-Learning Wave',icon:'fa-laptop-code',layout:'split',accent:'#8b5cf6'},
+  {id:'edu-4',cat:'education',name:'Bookwise Minimal',icon:'fa-book',layout:'centered',accent:'#f59e0b'},
+  {id:'edu-5',cat:'education',name:'Creative Scholar',icon:'fa-pencil-ruler',layout:'modern',accent:'#ec4899'},
+
+  {id:'corp-1',cat:'corporate',name:'Enterprise Slate',icon:'fa-building',layout:'standard',accent:'#1e293b'},
+  {id:'corp-2',cat:'corporate',name:'Executive Executive',icon:'fa-briefcase',layout:'classic',accent:'#0f172a'},
+  {id:'corp-3',cat:'corporate',name:'Tech Nexus',icon:'fa-network-wired',layout:'split',accent:'#6366f1'},
+  {id:'corp-4',cat:'corporate',name:'Global Node',icon:'fa-globe-americas',layout:'centered',accent:'#2563eb'},
+  {id:'corp-5',cat:'corporate',name:'Fintech Linear',icon:'fa-chart-line',layout:'modern',accent:'#10b981'},
+
+  {id:'min-1',cat:'minimal',name:'Pure White',icon:'fa-circle',layout:'centered',accent:'#000000'},
+  {id:'min-2',cat:'minimal',name:'Soft Matte',icon:'fa-square',layout:'standard',accent:'#64748b'},
+  {id:'min-3',cat:'minimal',name:'Linear Stark',icon:'fa-minus',layout:'classic',accent:'#1e1e1e'},
+  {id:'min-4',cat:'minimal',name:'Elegant Void',icon:'fa-adjust',layout:'split',accent:'#475569'},
+  {id:'min-5',cat:'minimal',name:'Asymmetric Zero',icon:'fa-border-none',layout:'modern',accent:'#000000'},
+
+  {id:'lux-1',cat:'luxury',name:'Imperial Gold',icon:'fa-gem',layout:'classic',accent:'#d4af37'},
+  {id:'lux-2',cat:'luxury',name:'Royal Velvet',icon:'fa-crown',layout:'standard',accent:'#b45309'},
+  {id:'lux-3',cat:'luxury',name:'Midnight Premium',icon:'fa-star',layout:'split',accent:'#e5c158'},
+  {id:'lux-4',cat:'luxury',name:'Marbled Silk',icon:'fa-feather-alt',layout:'centered',accent:'#c5a059'},
+  {id:'lux-5',cat:'luxury',name:'Onyx Majestic',icon:'fa-ribbon',layout:'modern',accent:'#d4af37'},
+
+  {id:'mod-1',cat:'modern',name:'Cyber Gradient',icon:'fa-rocket',layout:'modern',accent:'#d946ef'},
+  {id:'mod-2',cat:'modern',name:'Crypto Block',icon:'fa-cubes',layout:'split',accent:'#f59e0b'},
+  {id:'mod-3',cat:'modern',name:'Dynamic Flow',icon:'fa-wind',layout:'standard',accent:'#06b6d4'},
+  {id:'mod-4',cat:'modern',name:'Vector Splash',icon:'fa-bezier-curve',layout:'centered',accent:'#10b981'},
+  {id:'mod-5',cat:'modern',name:'App Launch',icon:'fa-mobile-alt',layout:'classic',accent:'#6366f1'},
+
+  {id:'crt-1',cat:'creative',name:'Studio Spectrum',icon:'fa-palette',layout:'modern',accent:'#ec4899'},
+  {id:'crt-2',cat:'creative',name:'Agency Matrix',icon:'fa-lightbulb',layout:'split',accent:'#3b82f6'},
+  {id:'crt-3',cat:'creative',name:'Capture Photo',icon:'fa-camera',layout:'standard',accent:'#f97316'},
+  {id:'crt-4',cat:'creative',name:'Audio Vibe',icon:'fa-music',layout:'centered',accent:'#8b5cf6'},
+  {id:'crt-5',cat:'creative',name:'Abstract Layer',icon:'fa-layer-group',layout:'classic',accent:'#14b8a6'},
+
+  {id:'ver-1',cat:'vertical',name:'Tall Standard',icon:'fa-ellipsis-v',layout:'standard',accent:'#4f46e5'},
+  {id:'ver-2',cat:'vertical',name:'Tall Split',icon:'fa-columns',layout:'split',accent:'#0ea5e9'},
+  {id:'ver-3',cat:'vertical',name:'Tall Minimal',icon:'fa-square',layout:'centered',accent:'#111827'},
+  {id:'ver-4',cat:'vertical',name:'Tall Creative',icon:'fa-paint-brush',layout:'modern',accent:'#f43f5e'},
+  {id:'ver-5',cat:'vertical',name:'Tall Corporate',icon:'fa-building',layout:'classic',accent:'#334155'}
+];
+
+// ── INDEPENDENT STATE CONTROL OBJECTS ──
+let curTpl = TEMPLATES[0];
+let curSide = 'front'; // 'front' or 'back'
+let dragMode = false;
+
+// Global Card Core sizes
+let globalCardW = 525;
+let globalCardH = 300;
+
+// Content assets
+let uploadedLogoB64 = null;
+let uploadedQRB64 = null;
+
+// Individual Configurations for Front vs Back side
+let sideConfigs = {
+  front: {
+    bgColor: '#ffffff', bgImage: null, bgOpacity: 100,
+    nameFont: 'Poppins', nameSize: 22, nameColor: '#1e293b',
+    titleFont: 'Poppins', titleSize: 13, titleColor: '#64748b',
+    contactFont: 'Poppins', contactSize: 11, contactColor: '#334155',
+    accentColor: '#4f46e5', iconColor: '#4f46e5',
+    borderWidth: 0, borderColor: '#475569', borderStyle: 'solid',
+    efShadow: true, efRound: true, ef3D: false, efGrad: false, efShine: false, efPulse: false, efFloat: false
+  },
+  back: {
+    bgColor: '#1e293b', bgImage: null, bgOpacity: 100,
+    nameFont: 'Poppins', nameSize: 22, nameColor: '#ffffff',
+    titleFont: 'Poppins', titleSize: 13, titleColor: '#94a3b8',
+    contactFont: 'Poppins', contactSize: 11, contactColor: '#cbd5e1',
+    accentColor: '#38bdf8', iconColor: '#38bdf8',
+    borderWidth: 0, borderColor: '#64748b', borderStyle: 'solid',
+    efShadow: true, efRound: true, ef3D: false, efGrad: false, efShine: false, efPulse: false, efFloat: false
+  }
+};
+
+// Seperated element coordinates for Front and Back elements
+let layoutCoordinates = {
+  front: {}, // schema format: { 'item-id': {x: 20, y: 50} }
+  back: {}
+};
+
+// Drag tracking variables
+let trackingElement = null;
+let dragStartX = 0, dragStartY = 0;
+let elementOffsetX = 0, elementOffsetY = 0;
+
+// Initialize System on load
+window.addEventListener('DOMContentLoaded', () => {
+  populateFontSelects();
+  renderTemplates('all');
+});
+
+function populateFontSelects() {
+  const selects = ['nameFont', 'titleFont', 'contactFont'];
+  let optionsHtml = FONTS_LIST.map(f => `<option value="${f}">${f}</option>`).join('');
+  selects.forEach(id => {
+    document.getElementById(id).innerHTML = optionsHtml;
+  });
+}
+
+function renderTemplates(cat) {
+  const grid = document.getElementById('tplGrid');
+  grid.innerHTML = '';
+  let items = cat === 'all' ? TEMPLATES : TEMPLATES.filter(t => t.cat === cat);
+  
+  items.forEach((t, index) => {
+    let card = document.createElement('div');
+    card.className = 'tpl-card';
+    card.style.animationDelay = (index * 0.03) + 's';
+    
+    let bgStyle = t.cat === 'luxury' ? '#111' : (t.cat==='minimal'?'#f8fafc':'#1e293b');
+    let textStyle = t.cat === 'minimal' ? '#0f172a' : '#f1f5f9';
+    
+    card.innerHTML = `
+      <div class="tpl-preview" style="background:${bgStyle}; color:${textStyle};">
+        <div style="text-align:center; padding:15px;">
+          <i class="fas ${t.icon}" style="font-size:2rem; margin-bottom:8px; color:${t.accent}"></i>
+          <div style="font-size:0.9rem; font-weight:600;">${t.name}</div>
+          <div style="font-size:0.7rem; opacity:0.6; text-transform:uppercase; letter-spacing:1px; margin-top:2px;">${t.cat}</div>
+        </div>
+        <div class="tpl-overlay">
+          <button class="btn-use" onclick="openEditorWithTemplate('${t.id}')"><i class="fas fa-magic"></i> Use Template</button>
+        </div>
+      </div>
+      <div class="tpl-info">
+        <h3>${t.name}</h3>
+        <p>${t.layout.toUpperCase()} Structural Mapping</p>
+        <div class="tpl-tags"><span class="tpl-tag">${t.cat}</span><span class="tpl-tag">${t.layout}</span></div>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+function filterTpl(cat, btn) {
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTemplates(cat);
+}
+
+function scrollToTemplates() {
+  document.getElementById('templates').scrollIntoView({behavior:'smooth'});
+}
+
+// ── ISOLATED ENGINE SWITCH (FRONT/BACK SIDE) ──
+function switchSideView(side) {
+  curSide = side;
+  document.getElementById('btnSideFront').classList.toggle('active', side === 'front');
+  document.getElementById('btnSideBack').classList.toggle('active', side === 'back');
+  
+  document.getElementById('targetSideLabel').textContent = side === 'front' ? 'Front Side' : 'Back Side';
+  
+  // Sync values on inputs panel to match state configurations of the selected side
+  syncRightPanelInputsFromState();
+  updateCard();
+}
+
+function syncRightPanelInputsFromState() {
+  let conf = sideConfigs[curSide];
+  document.getElementById('bgColor').value = conf.bgColor;
+  document.getElementById('bgOpacity').value = conf.bgOpacity;
+  document.getElementById('bgOpacityV').textContent = conf.bgOpacity + '%';
+  document.getElementById('nameFont').value = conf.nameFont;
+  document.getElementById('nameSize').value = conf.nameSize;
+  document.getElementById('nameSizeV').textContent = conf.nameSize + 'px';
+  document.getElementById('nameColor').value = conf.nameColor;
+  document.getElementById('titleFont').value = conf.titleFont;
+  document.getElementById('titleSize').value = conf.titleSize;
+  document.getElementById('titleSizeV').textContent = conf.titleSize + 'px';
+  document.getElementById('titleColor').value = conf.titleColor;
+  document.getElementById('contactFont').value = conf.contactFont;
+  document.getElementById('contactSize').value = conf.contactSize;
+  document.getElementById('contactSizeV').textContent = conf.contactSize + 'px';
+  document.getElementById('contactColor').value = conf.contactColor;
+  document.getElementById('accentColor').value = conf.accentColor;
+  document.getElementById('iconColor').value = conf.iconColor;
+  document.getElementById('borderWidth').value = conf.borderWidth;
+  document.getElementById('borderWidthV').textContent = conf.borderWidth + 'px';
+  document.getElementById('borderColor').value = conf.borderColor;
+  document.getElementById('borderStyle').value = conf.borderStyle;
+  
+  document.getElementById('efShadow').checked = conf.efShadow;
+  document.getElementById('efRound').checked = conf.efRound;
+  document.getElementById('ef3D').checked = conf.ef3D;
+  document.getElementById('efGrad').checked = conf.efGrad;
+  document.getElementById('efShine').checked = conf.efShine;
+  document.getElementById('efPulse').checked = conf.efPulse;
+  document.getElementById('efFloat').checked = conf.efFloat;
+
+  const bgBtn = document.getElementById('removeBgBtn');
+  const label = document.getElementById('bgBoxText');
+  if (conf.bgImage) {
+    label.textContent = "✓ Image Attached";
+    bgBtn.style.display = 'block';
+  } else {
+    label.textContent = "Upload Backdrop";
+    bgBtn.style.display = 'none';
+  }
+}
+
+// Push configuration to active side only
+function pushSideConfig(key, val) {
+  sideConfigs[curSide][key] = val;
+  updateCard();
+}
+
+function changeCardDimension() {
+  globalCardW = parseInt(document.getElementById('cardW').value) || 525;
+  globalCardH = parseInt(document.getElementById('cardH').value) || 300;
+  updateCard();
+}
+
+// ── FILE UPLOAD HANDLING ──
+function handleLogo(e) {
+  let file = e.target.files[0];
+  if(!file) return;
+  let r = new FileReader();
+  r.onload = ev => {
+    uploadedLogoB64 = ev.target.result;
+    document.getElementById('logoBoxText').textContent = "✓ Attached: " + file.name.substring(0,10);
+    updateCard();
+  };
+  r.readAsDataURL(file);
+}
+
+function handleQR(e) {
+  let file = e.target.files[0];
+  if(!file) return;
+  let r = new FileReader();
+  r.onload = ev => {
+    uploadedQRB64 = ev.target.result;
+    document.getElementById('qrBoxText').textContent = "✓ Attached Image";
+    updateCard();
+  };
+  r.readAsDataURL(file);
+}
+
+function handleSideBG(e) {
+  let file = e.target.files[0];
+  if(!file) return;
+  let r = new FileReader();
+  r.onload = ev => {
+    sideConfigs[curSide].bgImage = ev.target.result;
+    document.getElementById('bgBoxText').textContent = "✓ Loaded Image";
+    document.getElementById('removeBgBtn').style.display = 'block';
+    updateCard();
+  };
+  r.readAsDataURL(file);
+}
+
+function clearSideBG() {
+  sideConfigs[curSide].bgImage = null;
+  document.getElementById('bgFile').value = '';
+  document.getElementById('bgBoxText').textContent = "Upload Backdrop";
+  document.getElementById('removeBgBtn').style.display = 'none';
+  updateCard();
+}
+
+function toggleQRCustom() {
+  let t = document.getElementById('qrType').value;
+  document.getElementById('qrCustomGroup').style.display = (t === 'custom') ? 'block' : 'none';
+}
+
+// ── EXTRACT DATA PACKET ──
+function gatherCurrentInputData() {
+  return {
+    name: document.getElementById('iName').value || 'Johnathan Doe',
+    title: document.getElementById('iTitle').value || 'Creative Director',
+    company: document.getElementById('iCompany').value || 'Innovate Agency Ltd',
+    phone: document.getElementById('iPhone').value || '+1 (555) 019-2834',
+    email: document.getElementById('iEmail').value || 'hello@domain.com',
+    website: document.getElementById('iWeb').value || 'www.domain.com',
+    address: document.getElementById('iAddr').value || 'Industrial Zone, Building 4B',
+    whatsapp: document.getElementById('iWA').value || '',
+    linkedin: document.getElementById('iLI').value || '',
+    instagram: document.getElementById('iIG').value || '',
+    facebook: document.getElementById('iFB').value || '',
+    twitter: document.getElementById('iTW').value || '',
+    youtube: document.getElementById('iYT').value || '',
+    logoSize: parseInt(document.getElementById('logoSize').value) || 55,
+    qrSize: parseInt(document.getElementById('qrSize').value) || 65
+  };
+}
+
+// ── WORKSPACE BUILDER ENGINE ──
+function updateCard() {
+  const card = document.getElementById('businessCard');
+  if(!card || !curTpl) return;
+
+  let d = gatherCurrentInputData();
+  let conf = sideConfigs[curSide];
+
+  // Set card bounds
+  card.style.width = globalCardW + 'px';
+  card.style.height = globalCardH + 'px';
+
+  // Background priority logic
+  let bgCSS = '';
+  if(conf.bgImage) {
+    bgCSS = `background: url('${conf.bgImage}') center/cover no-repeat;`;
+  } else {
+    bgCSS = `background: ${conf.bgColor};`;
+  }
+
+  // Border logic
+  let borderCSS = conf.borderWidth > 0 ? `border: ${conf.borderWidth}px ${conf.borderStyle} ${conf.borderColor};` : 'border:none;';
+  let shadowCSS = conf.efShadow ? 'box-shadow: 0 22px 40px rgba(0,0,0,0.25);' : 'box-shadow: none;';
+  let roundCSS = conf.efRound ? 'border-radius: 12px;' : 'border-radius: 0px;';
+
+  // Animation CSS synthesis
+  let activeClasses = 'business-card';
+  if(conf.ef3D) activeClasses += ' effect-3d';
+  if(conf.efGrad) activeClasses += ' effect-gra';
+  if(conf.efShine) activeClasses += ' effect-shine';
+  if(conf.efPulse) activeClasses += ' effect-pulse';
+  if(conf.efFloat) activeClasses += ' effect-float';
+
+  card.className = activeClasses;
+  card.style.cssText = `width:${globalCardW}px; height:${globalCardH}px; ${bgCSS} ${borderCSS} ${shadowCSS} ${roundCSS} position:relative; overflow:hidden;`;
+
+  // Internal structures injection
+  card.innerHTML = buildActiveInnerLayout(conf, d);
+
+  // Apply absolute manual drag positioning parameters if saved
+  applyCoordinatesToDOM();
+}
+
+function buildActiveInnerLayout(conf, d) {
+  // Build pieces
+  let logoPx = d.logoSize + 'px';
+  let logoMarkup = uploadedLogoB64 
+    ? `<img src="${uploadedLogoB64}" style="width:${logoPx}; height:${logoPx}; object-fit:contain; border-radius:6px;" alt="logo">`
+    : `<i class="fas ${curTpl.icon}" style="font-size:${Math.round(d.logoSize*0.6)}px; color:${conf.iconColor};"></i>`;
+
+  let qrMarkup = '';
+  let qrTypeSelected = document.getElementById('qrType').value;
+  if(qrTypeSelected !== 'none') {
+    let rawContent = 'https://example.com';
+    if(qrTypeSelected === 'website') rawContent = d.website;
+    else if(qrTypeSelected === 'custom') rawContent = document.getElementById('qrCustom').value || 'Custom';
+    else if(qrTypeSelected === 'vcard') {
+      rawContent = `BEGIN:VCARD\nFN:${d.name}\nORG:${d.company}\nTEL:${d.phone}\nEMAIL:${d.email}\nURL:${d.website}\nEND:VCARD`;
+    }
+
+    let qrImageSource = uploadedQRB64 ? uploadedQRB64 : `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(rawContent)}`;
+    qrMarkup = `<div class="qr-box"><img src="${qrImageSource}" style="width:${d.qrSize}px; height:${d.qrSize}px; display:block;" alt="QR"></div>`;
+  }
+
+  let contactsArr = [];
+  if(d.phone) contactsArr.push(`<div class="c-item" style="color:${conf.contactColor}; font-family:'${conf.contactFont}',sans-serif; font-size:${conf.contactSize}px;"><i class="fas fa-phone" style="color:${conf.iconColor}"></i><span>${d.phone}</span></div>`);
+  if(d.email) contactsArr.push(`<div class="c-item" style="color:${conf.contactColor}; font-family:'${conf.contactFont}',sans-serif; font-size:${conf.contactSize}px;"><i class="fas fa-envelope" style="color:${conf.iconColor}"></i><span>${d.email}</span></div>`);
+  if(d.website) contactsArr.push(`<div class="c-item" style="color:${conf.contactColor}; font-family:'${conf.contactFont}',sans-serif; font-size:${conf.contactSize}px;"><i class="fas fa-globe" style="color:${conf.iconColor}"></i><span>${d.website}</span></div>`);
+  if(d.address) contactsArr.push(`<div class="c-item" style="color:${conf.contactColor}; font-family:'${conf.contactFont}',sans-serif; font-size:${conf.contactSize}px;"><i class="fas fa-map-marker-alt" style="color:${conf.iconColor}"></i><span>${d.address}</span></div>`);
+
+  let socialsArr = [];
+  if(d.whatsapp) socialsArr.push(`<div class="soc-icon wa"><i class="fab fa-whatsapp"></i></div>`);
+  if(d.linkedin) socialsArr.push(`<div class="soc-icon li"><i class="fab fa-linkedin-in"></i></div>`);
+  if(d.instagram) socialsArr.push(`<div class="soc-icon ig"><i class="fab fa-instagram"></i></div>`);
+  if(d.facebook) socialsArr.push(`<div class="soc-icon fb"><i class="fab fa-facebook-f"></i></div>`);
+  if(d.twitter) socialsArr.push(`<div class="soc-icon tw"><i class="fab fa-twitter"></i></div>`);
+  if(d.youtube) socialsArr.push(`<div class="soc-icon yt"><i class="fab fa-youtube"></i></div>`);
+
+  let socialBarMarkup = socialsArr.length > 0 ? `<div class="social-bar">${socialsArr.join('')}</div>` : '';
+
+  // Return markup isolated with drag nodes wrapper injection if necessary
+  let pad = Math.round(globalCardW * 0.05) + 'px';
+
+  // Base typography variables
+  let nameHTML = `<div style="font-family:'${conf.nameFont}',sans-serif; font-size:${conf.nameSize}px; color:${conf.nameColor}; font-weight:700; line-height:1.2;">${d.name}</div>`;
+  let titleHTML = `<div style="font-family:'${conf.titleFont}',sans-serif; font-size:${conf.titleSize}px; color:${conf.titleColor}; font-weight:500; margin-top:2px;">${d.title}</div>`;
+  let companyHTML = `<div style="font-size:${Math.round(conf.nameSize*0.65)}px; font-weight:800; color:${conf.accentColor}; letter-spacing:1px; text-transform:uppercase; margin-bottom:4px;">${d.company}</div>`;
+
+  // Structural Template Distribution Layouts
+  if(curSide === 'back') {
+    // Clean back branding look
+    return `
+      <div id="node-company" class="drag-element" data-element-id="company" style="left:5%; top:35%; width:90%; text-align:center;">
+        <div class="drag-handle">Move Company</div>${companyHTML}
+      </div>
+      <div id="node-logo" class="drag-element" data-element-id="logo" style="left:45%; top:10%; width:auto;">
+        <div class="drag-handle">Logo</div>${logoMarkup}
+      </div>
+      <div id="node-qr" class="drag-element" data-element-id="qr" style="left:43%; top:55%; width:auto;">
+        <div class="drag-handle">QR</div>${qrMarkup}
+      </div>
+    `;
+  }
+
+  // Switch layout formulas for front side
+  if(curTpl.layout === 'classic') {
+    return `
+      <div id="node-logo" class="drag-element" data-element-id="logo" style="left:${pad}; top:${pad};">${logoMarkup}<div class="drag-handle">Logo</div></div>
+      <div id="node-company" class="drag-element" data-element-id="company" style="right:${pad}; top:${pad}; text-align:right;">${companyHTML}<div class="drag-handle">Company</div></div>
+      <div id="node-identity" class="drag-element" data-element-id="identity" style="left:${pad}; bottom:35%;">
+        ${nameHTML}${titleHTML}<div class="drag-handle">Identity</div>
+      </div>
+      <div id="node-contacts" class="drag-element" data-element-id="contacts" style="left:${pad}; bottom:${pad};">
+        ${contactsArr.join('')}<div class="drag-handle">Contacts</div>
+      </div>
+      <div id="node-qr" class="drag-element" data-element-id="qr" style="right:${pad}; bottom:${pad};">${qrMarkup}<div class="drag-handle">QR Code</div></div>
+      <div id="node-socials" class="drag-element" data-element-id="socials" style="right:${pad}; bottom:35%;">${socialBarMarkup}<div class="drag-handle">Socials</div></div>
+    `;
+  } 
+  else if(curTpl.layout === 'split') {
+    return `
+      <div style="position:absolute; left:0; top:0; width:35%; height:100%; background:rgba(0,0,0,0.04); border-right:1px solid rgba(0,0,0,0.05);"></div>
+      <div id="node-logo" class="drag-element" data-element-id="logo" style="left:8%; top:20%; text-align:center;">${logoMarkup}<div class="drag-handle">Logo</div></div>
+      <div id="node-company" class="drag-element" data-element-id="company" style="left:4%; top:50%; width:27%; text-align:center;">${companyHTML}<div class="drag-handle">Company</div></div>
+      <div id="node-identity" class="drag-element" data-element-id="identity" style="left:40%; top:${pad};">
+        ${nameHTML}${titleHTML}<div class="drag-handle">Identity</div>
+      </div>
+      <div id="node-contacts" class="drag-element" data-element-id="contacts" style="left:40%; bottom:${pad};">
+        ${contactsArr.join('')}<div class="drag-handle">Contacts</div>
+      </div>
+      <div id="node-qr" class="drag-element" data-element-id="qr" style="right:${pad}; top:${pad};">${qrMarkup}<div class="drag-handle">QR Code</div></div>
+      <div id="node-socials" class="drag-element" data-element-id="socials" style="right:${pad}; bottom:${pad};">${socialBarMarkup}<div class="drag-handle">Socials</div></div>
+    `;
+  }
+  else if(curTpl.layout === 'centered') {
+    return `
+      <div id="node-logo" class="drag-element" data-element-id="logo" style="left:45%; top:10%;">${logoMarkup}<div class="drag-handle">Logo</div></div>
+      <div id="node-company" class="drag-element" data-element-id="company" style="left:10%; top:32%; width:80%; text-align:center;">${companyHTML}<div class="drag-handle">Company</div></div>
+      <div id="node-identity" class="drag-element" data-element-id="identity" style="left:10%; top:45%; width:80%; text-align:center;">
+        ${nameHTML}${titleHTML}<div class="drag-handle">Identity</div>
+      </div>
+      <div id="node-contacts" class="drag-element" data-element-id="contacts" style="left:10%; top:70%; width:80%; display:flex; flex-direction:row; gap:10px; justify-content:center; flex-wrap:wrap;">
+        ${contactsArr.join('')}<div class="drag-handle">Contacts</div>
+      </div>
+      <div id="node-qr" class="drag-element" data-element-id="qr" style="right:4%; top:40%;">${qrMarkup}<div class="drag-handle">QR</div></div>
+      <div id="node-socials" class="drag-element" data-element-id="socials" style="left:40%; bottom:4%;">${socialBarMarkup}<div class="drag-handle">Socials</div></div>
+    `;
+  }
+  else if(curTpl.layout === 'modern') {
+    return `
+      <div style="position:absolute; left:0; top:0; width:100%; height:8px; background:${conf.accentColor};"></div>
+      <div id="node-company" class="drag-element" data-element-id="company" style="left:${pad}; top:20px;">${companyHTML}<div class="drag-handle">Company</div></div>
+      <div id="node-logo" class="drag-element" data-element-id="logo" style="right:${pad}; top:20px;">${logoMarkup}<div class="drag-handle">Logo</div></div>
+      <div id="node-identity" class="drag-element" data-element-id="identity" style="left:${pad}; top:35%;">
+        ${nameHTML}${titleHTML}<div class="drag-handle">Identity</div>
+      </div>
+      <div id="node-contacts" class="drag-element" data-element-id="contacts" style="left:${pad}; bottom:${pad};">
+        ${contactsArr.join('')}<div class="drag-handle">Contacts</div>
+      </div>
+      <div id="node-qr" class="drag-element" data-element-id="qr" style="right:${pad}; bottom:50px;">${qrMarkup}<div class="drag-handle">QR Code</div></div>
+      <div id="node-socials" class="drag-element" data-element-id="socials" style="right:${pad}; bottom:${pad};">${socialBarMarkup}<div class="drag-handle">Socials</div></div>
+    `;
+  }
+  else {
+    // STANDARD LAYOUT MAP
+    return `
+      <div id="node-company" class="drag-element" data-element-id="company" style="left:${pad}; top:${pad};">${companyHTML}<div class="drag-handle">Company</div></div>
+      <div id="node-logo" class="drag-element" data-element-id="logo" style="right:${pad}; top:${pad};">${logoMarkup}<div class="drag-handle">Logo</div></div>
+      <div id="node-identity" class="drag-element" data-element-id="identity" style="left:${pad}; top:32%;">
+        ${nameHTML}${titleHTML}<div class="drag-handle">Identity</div>
+      </div>
+      <div id="node-contacts" class="drag-element" data-element-id="contacts" style="left:${pad}; bottom:${pad};">
+        ${contactsArr.join('')}<div class="drag-handle">Contacts</div>
+      </div>
+      <div id="node-qr" class="drag-element" data-element-id="qr" style="right:${pad}; bottom:${pad};">${qrMarkup}<div class="drag-handle">QR Code</div></div>
+      <div id="node-socials" class="drag-element" data-element-id="socials" style="right:${pad}; bottom:75px;">${socialBarMarkup}<div class="drag-handle">Socials</div></div>
+    `;
+  }
+}
+
+// ── DRAG ENGINE CORE IMPL ──
+function toggleDragMode() { toggleDragEngine(); } // Backward wrapper alias
+function toggleDragEngine() {
+  dragMode = !dragMode;
+  let btn = document.getElementById('dragToggleBtn');
+  let txt = document.getElementById('dragToggleText');
+  
+  if(dragMode) {
+    btn.style.background = 'var(--primary)';
+    btn.style.color = '#fff';
+    txt.textContent = "Drag Mode: ON";
+    injectDragInterceptors();
+  } else {
+    btn.style.background = 'transparent';
+    btn.style.color = 'var(--text2)';
+    txt.textContent = "Drag Mode: OFF";
+    removeDragInterceptors();
+  }
+  updateCard();
+}
+
+function injectDragInterceptors() {
+  const container = document.getElementById('businessCard');
+  
+  // Mouse listeners
+  container.addEventListener('mousedown', initiateDragEngine);
+  window.addEventListener('mousemove', processDragEngine);
+  window.addEventListener('mouseup', concludeDragEngine);
+  
+  // Touch mobile listeners
+  container.addEventListener('touchstart', initiateDragEngine, {passive: false});
+  window.addEventListener('touchmove', processDragEngine, {passive: false});
+  window.addEventListener('touchend', concludeDragEngine);
+}
+
+function removeDragInterceptors() {
+  const container = document.getElementById('businessCard');
+  if(!container) return;
+  container.removeEventListener('mousedown', initiateDragEngine);
+  window.removeEventListener('mousemove', processDragEngine);
+  window.removeEventListener('mouseup', concludeDragEngine);
+  container.removeEventListener('touchstart', initiateDragEngine);
+  window.removeEventListener('touchmove', processDragEngine);
+  window.removeEventListener('touchend', concludeDragEngine);
+}
+
+function initiateDragEngine(e) {
+  if(!dragMode) return;
+  
+  let targetNode = e.target.closest('.drag-element');
+  if(!targetNode) return;
+  
+  e.preventDefault();
+  trackingElement = targetNode;
+  trackingElement.classList.add('dragging-now');
+  
+  let pointerX = e.type.startsWith('touch') ? e.touches[0].clientX : e.clientX;
+  let pointerY = e.type.startsWith('touch') ? e.touches[0].clientY : e.clientY;
+  
+  let parentRect = document.getElementById('businessCard').getBoundingClientRect();
+  let selfRect = trackingElement.getBoundingClientRect();
+  
+  // Left and Top offset in relation to parent container bounds
+  elementOffsetX = pointerX - selfRect.left;
+  elementOffsetY = pointerY - selfRect.top;
+}
+
+function processDragEngine(e) {
+  if(!dragMode || !trackingElement) return;
+  
+  if(e.cancelable) e.preventDefault();
+  
+  let pointerX = e.type.startsWith('touch') ? e.touches[0].clientX : e.clientX;
+  let pointerY = e.type.startsWith('touch') ? e.touches[0].clientY : e.clientY;
+  
+  let parent = document.getElementById('businessCard');
+  let parentRect = parent.getBoundingClientRect();
+  
+  // Compute target position percentages
+  let targetLeftPx = pointerX - parentRect.left - elementOffsetX;
+  let targetTopPx = pointerY - parentRect.top - elementOffsetY;
+  
+  // Boundary limiting filters
+  if (targetLeftPx < 0) targetLeftPx = 0;
+  if (targetTopPx < 0) targetTopPx = 0;
+  if (targetLeftPx > parentRect.width - 20) targetLeftPx = parentRect.width - 20;
+  if (targetTopPx > parentRect.height - 20) targetTopPx = parentRect.height - 20;
+  
+  let pctX = (targetLeftPx / parentRect.width) * 100;
+  let pctY = (targetTopPx / parentRect.height) * 100;
+  
+  trackingElement.style.left = pctX.toFixed(2) + '%';
+  trackingElement.style.top = pctY.toFixed(2) + '%';
+  trackingElement.style.right = 'auto';
+  trackingElement.style.bottom = 'auto';
+  
+  // Save coordinates bound directly to specific active view side layer stack!
+  let keyId = trackingElement.getAttribute('data-element-id');
+  layoutCoordinates[curSide][keyId] = {
+    x: pctX.toFixed(2) + '%',
+    y: pctY.toFixed(2) + '%'
+  };
+}
+
+function concludeDragEngine() {
+  if(trackingElement) {
+    trackingElement.classList.remove('dragging-now');
+    trackingElement = null;
+  }
+}
+
+function applyCoordinatesToDOM() {
+  let coords = layoutCoordinates[curSide];
+  for (let keyId in coords) {
+    let node = document.querySelector(`#businessCard [data-element-id="${keyId}"]`);
+    if(node) {
+      node.style.left = coords[keyId].x;
+      node.style.top = coords[keyId].y;
+      node.style.right = 'auto';
+      node.style.bottom = 'auto';
+    }
+  }
+}
+
+// ── OPEN / CLOSE EDITOR PANEL LAYOUT ──
+function openEditorWithTemplate(id) {
+  curTpl = TEMPLATES.find(t => t.id === id);
+  if(!curTpl) return;
+  
+  // Reset isolated state parameters to match initial template color signatures
+  sideConfigs.front.accentColor = curTpl.accent;
+  sideConfigs.front.iconColor = curTpl.accent;
+  
+  // Clear coordinates on clean load
+  layoutCoordinates.front = {};
+  layoutCoordinates.back = {};
+
+  document.getElementById('editorSec').classList.add('open');
+  switchSideView('front');
+}
+
+function closeEditor() {
+  document.getElementById('editorSec').classList.remove('open');
+}
+
+// ── EXPORTING / EXECUTIONS SYSTEM ──
+async function processSideSnap(side) {
+  let initialSide = curSide;
+  if(initialSide !== side) {
+    switchSideView(side);
+    await new Promise(r => setTimeout(r, 150));
+  }
+  
+  // Temporarily disable drag visual frames for clean captures
+  let savedDragState = dragMode;
+  if(savedDragState) {
+    dragMode = false;
+    updateCard();
+  }
+
+  const node = document.getElementById('businessCard');
+  const canvas = await html2canvas(node, {
+    useCORS: true,
+    allowTaint: true,
+    scale: 3, // High Fidelity 300 DPI target scaling multiplier
+    backgroundColor: null
+  });
+
+  if(savedDragState) {
+    dragMode = true;
+    updateCard();
+  }
+
+  if(initialSide !== side) {
+    switchSideView(initialSide);
+  }
+
+  return canvas.toDataURL('image/png', 1.0);
+}
+
+async function downloadPNG() {
+  try {
+    showLoading("Rendering PNG image...");
+    let b64 = await processSideSnap(curSide);
+    let a = document.createElement('a');
+    a.href = b64;
+    a.download = `cardcraft-${curSide}-${Date.now()}.png`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    hideLoading();
+  } catch(err) {
+    console.error(err); hideLoading(); alert("PNG rendering failed.");
+  }
+}
+
+async function downloadPDF() {
+  try {
+    showLoading("Compiling PDF page...");
+    let imgData = await processSideSnap(curSide);
+    const { jsPDF } = window.jspdf;
+    
+    let orientation = globalCardW >= globalCardH ? 'landscape' : 'portrait';
+    let wIn = 3.5, hIn = 2.0;
+    if(orientation === 'portrait') { wIn = 2.0; hIn = 3.5; }
+
+    let pdf = new jsPDF({orientation: orientation, unit: 'in', format: [wIn, hIn]});
+    pdf.addImage(imgData, 'PNG', 0, 0, wIn, hIn);
+    pdf.save(`business-card-${curSide}-${Date.now()}.pdf`);
+    hideLoading();
+  } catch(err) {
+    console.error(err); hideLoading(); alert("PDF Generation encountered an error.");
+  }
+}
+
+async function downloadZIP() {
+  try {
+    showLoading("Packaging Front & Back assets into ZIP archive...");
+    let frontB64 = await processSideSnap('front');
+    let backB64 = await processSideSnap('back');
+
+    const zip = new JSZip();
+    zip.file("front-design.png", frontB64.split(',')[1], {base64: true});
+    zip.file("back-design.png", backB64.split(',')[1], {base64: true});
+
+    // Create printable double page single document PDF
+    const { jsPDF } = window.jspdf;
+    let orientation = globalCardW >= globalCardH ? 'landscape' : 'portrait';
+    let wIn = 3.5, hIn = 2.0; if(orientation === 'portrait') { wIn = 2.0; hIn = 3.5; }
+    
+    let pdf = new jsPDF({orientation: orientation, unit: 'in', format: [wIn, hIn]});
+    pdf.addImage(frontB64, 'PNG', 0, 0, wIn, hIn);
+    pdf.addPage();
+    pdf.addImage(backB64, 'PNG', 0, 0, wIn, hIn);
+    let pdfBuffer = pdf.output('arraybuffer');
+    zip.file("complete-press-print.pdf", pdfBuffer);
+
+    let contentBlob = await zip.generateAsync({type: 'blob'});
+    let url = URL.createObjectURL(contentBlob);
+    
+    let a = document.createElement('a');
+    a.href = url;
+    a.download = `cardcraft-masterpack-${Date.now()}.zip`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    hideLoading();
+  } catch(err) {
+    console.error(err); hideLoading(); alert("Error compiling zip archive.");
+  }
+}
+
+function showLoading(msg) {
+  document.getElementById('loadingMsg').textContent = msg || 'Processing...';
+  document.getElementById('loadingOverlay').classList.add('on');
+}
+function hideLoading() {
+  document.getElementById('loadingOverlay').classList.remove('on');
+}
+</script>
+</body>
+</html>
