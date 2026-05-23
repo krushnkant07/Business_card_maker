@@ -1,1 +1,1318 @@
-hi
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Wedding Album Creator Pro - Premium Designer Suite</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Great+Vibes&family=Cinzel:wght@400;600;700&family=Poppins:wght@200;300;400;500;600;700&family=Montserrat:wght@300;400;600&family=Alex+Brush&family=Parisienne&family=Pinyon+Script&family=Sacramento&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+<style>
+/* ===== CORE SYSTEM VARIABLES ===== */
+:root {
+  --crimson: #9b1a2f;
+  --crimson-dark: #6b0f1e;
+  --crimson-light: #c74560;
+  --gold: #c9a84c;
+  --gold-light: #e8d08a;
+  --gold-pale: #f7edd6;
+  --cream: #fdf8f0;
+  --dark: #1c1008;
+  --text: #3a2a1a;
+  --gray: #7a6a5a;
+  --white: #ffffff;
+  --shadow-sm: 0 4px 20px rgba(28,16,8,0.08);
+  --shadow-md: 0 10px 40px rgba(28,16,8,0.12);
+  --shadow-lg: 0 20px 70px rgba(28,16,8,0.18);
+  --radius: 18px;
+  --radius-sm: 10px;
+  --font-serif: 'Playfair Display', serif;
+  --font-body: 'Poppins', sans-serif;
+  --font-script: 'Great Vibes', cursive;
+  --font-formal: 'Cinzel', serif;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ===== BASE STYLES ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--cream);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+button { cursor: pointer; font-family: var(--font-body); border: none; background: none; }
+input, select, textarea { font-family: var(--font-body); outline: none; }
+img { max-width: 100%; display: block; }
+
+/* ===== APP ENVIRONMENT LAYOUT ===== */
+.app-container {
+  display: flex;
+  height: 100vh;
+  padding-top: 70px;
+  position: relative;
+  z-index: 2;
+}
+
+/* ===== SCROLLBARS ===== */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--gold-pale); }
+::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 4px; }
+
+/* ===== BACKGROUND MAGIC ORNAMENTS ===== */
+#particles {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 0; overflow: hidden;
+}
+.particle {
+  position: absolute; animation: floatUp linear infinite; opacity: 0; user-select: none;
+}
+@keyframes floatUp {
+  0% { transform: translateY(110vh) rotate(0deg) scale(0.5); opacity: 0; }
+  10% { opacity: 0.6; }
+  90% { opacity: 0.4; }
+  100% { transform: translateY(-10vh) rotate(360deg) scale(1.3); opacity: 0; }
+}
+
+/* ===== APP HEADER BAR ===== */
+.header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 0 30px; height: 70px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(253,248,240,0.95); backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(201,168,76,0.25);
+  box-shadow: var(--shadow-sm);
+}
+.logo {
+  display: flex; align-items: center; gap: 12px;
+  font-family: var(--font-serif); font-size: 1.4rem; font-weight: 700;
+  color: var(--crimson-dark); text-decoration: none;
+}
+.logo i { color: var(--gold); }
+.top-actions { display: flex; gap: 15px; align-items: center; }
+
+.action-btn {
+  padding: 10px 24px; border-radius: 50px; font-size: 0.88rem; font-weight: 600;
+  display: flex; align-items: center; gap: 8px; transition: var(--transition);
+}
+.action-btn.primary {
+  background: linear-gradient(135deg, var(--crimson), var(--crimson-dark)); color: white;
+  box-shadow: 0 4px 15px rgba(155,26,47,0.3);
+}
+.action-btn.primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(155,26,47,0.45); }
+.action-btn.secondary {
+  background: white; color: var(--text); border: 1.5px solid rgba(201,168,76,0.4);
+}
+.action-btn.secondary:hover { border-color: var(--crimson); color: var(--crimson); }
+
+/* ===== CONTROL SIDEBAR (LEFT) ===== */
+.sidebar {
+  width: 380px; background: white; border-right: 1px solid rgba(201,168,76,0.2);
+  display: flex; flex-direction: column; height: 100%; z-index: 10;
+  box-shadow: 4px 0 25px rgba(0,0,0,0.02);
+}
+.sidebar-tabs {
+  display: flex; border-bottom: 1px solid #f0ebd8; background: #faf6ed;
+}
+.tab-item {
+  flex: 1; padding: 15px 10px; font-size: 0.82rem; font-weight: 600;
+  color: var(--gray); text-align: center; border-bottom: 3px solid transparent;
+  transition: var(--transition); display: flex; flex-direction: column; align-items: center; gap: 5px;
+}
+.tab-item i { font-size: 1.1rem; }
+.tab-item.active {
+  color: var(--crimson); border-bottom-color: var(--crimson); background: white;
+}
+.sidebar-content {
+  flex: 1; overflow-y: auto; padding: 25px; display: none;
+}
+.sidebar-content.active { display: block; }
+
+/* ===== ENGINE WORKSPACE CANVAS (RIGHT) ===== */
+.workspace {
+  flex: 1; background: #f2ebd9; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; overflow: relative; padding: 40px;
+}
+.canvas-wrapper {
+  position: relative; box-shadow: var(--shadow-lg); border: 8px solid white;
+  background: white; border-radius: 4px; transition: transform 0.3s;
+}
+
+/* ===== LIVE INTERACTIVE WORKSPACE CANVAS ===== */
+.album-canvas {
+  width: 800px; height: 500px; position: relative; overflow: hidden;
+  background: #111; user-select: none;
+}
+
+/* ===== DYNAMIC LAYER ELEMENTS ===== */
+.layer-image-container {
+  position: absolute; overflow: hidden; transition: border-radius 0.3s, transform 0.3s;
+  cursor: pointer;
+}
+.layer-image-container img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+
+.layer-text {
+  position: absolute; padding: 6px; white-space: nowrap; cursor: move;
+  transform-origin: center center; user-select: none; display: inline-block;
+}
+.layer-text:hover, .layer-image-container:hover {
+  outline: 2px dashed var(--gold);
+}
+.layer-text.selected, .layer-image-container.selected {
+  outline: 2px solid var(--crimson) !important;
+}
+
+/* ===== CONTROL PANEL COMPONENTS ===== */
+.control-group { margin-bottom: 24px; }
+.control-label {
+  font-family: var(--font-formal); font-size: 0.8rem; letter-spacing: 0.1em;
+  color: var(--dark); font-weight: 700; margin-bottom: 10px; display: block;
+}
+.input-field {
+  width: 100%; padding: 12px 15px; border-radius: var(--radius-sm);
+  border: 1.5px solid #e2dac5; font-size: 0.9rem; transition: var(--transition);
+}
+.input-field:focus { border-color: var(--crimson); background: #fffcf7; }
+
+.range-slider-container { display: flex; align-items: center; gap: 12px; }
+.range-slider {
+  flex: 1; accent-color: var(--crimson); height: 5px; background: #e5dfd2; border-radius: 5px;
+}
+.range-val { font-size: 0.85rem; font-weight: 600; color: var(--crimson); width: 35px; text-align: right; }
+
+/* ===== PHOTO DESIGN CONFIGURATION FRAMES ===== */
+.design-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.design-chip {
+  padding: 12px; background: #fdfaf2; border: 1.5px solid #eae2cc; text-align: center;
+  border-radius: var(--radius-sm); font-size: 0.78rem; font-weight: 500; transition: var(--transition);
+}
+.design-chip:hover { border-color: var(--gold); background: #fffdf9; }
+.design-chip.active { background: var(--gold-pale); border-color: var(--gold); color: var(--crimson-dark); font-weight: 600; }
+
+/* ===== STYLES GALLERY PICKER ===== */
+.style-list { display: flex; flex-direction: column; gap: 10px; }
+.style-option {
+  padding: 12px 16px; background: #faf6ec; border-left: 4px solid var(--gold);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-size: 0.85rem; transition: var(--transition);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.style-option:hover { background: #fdfaf2; transform: translateX(3px); }
+.style-option.active { border-left-color: var(--crimson); background: #fff6f7; font-weight: 600; }
+
+/* ===== TEMPLATE PRESETS THUMBNAILS ===== */
+.preset-thumbs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.preset-card {
+  border-radius: var(--radius-sm); overflow: hidden; border: 2px solid transparent;
+  box-shadow: var(--shadow-sm); transition: var(--transition); aspect-ratio: 1.5;
+  background: #333; position: relative;
+}
+.preset-card:hover { transform: scale(1.03); }
+.preset-card.active { border-color: var(--crimson); box-shadow: var(--shadow-md); }
+.preset-meta {
+  position: absolute; bottom: 0; left: 0; right: 0; padding: 6px;
+  background: rgba(0,0,0,0.6); color: white; font-size: 0.7rem; text-align: center;
+}
+
+/* ===== TOOLBAR CONTROLS ===== */
+.canvas-toolbar {
+  margin-top: 20px; display: flex; gap: 15px; background: white;
+  padding: 10px 25px; border-radius: 50px; border: 1px solid rgba(201,168,76,0.25);
+  box-shadow: var(--shadow-sm);
+}
+.tool-btn {
+  width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; color: var(--gray); font-size: 0.95rem; transition: var(--transition);
+}
+.tool-btn:hover { background: var(--gold-pale); color: var(--crimson); }
+.tool-btn.active { background: var(--crimson); color: white; }
+
+/* ===== COLOR PICKER CUSTOM ENGINE ===== */
+.color-swatch-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.swatch {
+  width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid white;
+  box-shadow: 0 0 0 1px #ddd; transition: var(--transition);
+}
+.swatch:hover { transform: scale(1.15); }
+
+/* ===== TOAST ALERTS OVERLAY ===== */
+#toastBox {
+  position: fixed; bottom: 30px; right: 30px; z-index: 1000;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.toast {
+  padding: 15px 25px; background: white; border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-lg); border-left: 5px solid var(--crimson);
+  font-size: 0.88rem; font-weight: 500; display: flex; align-items: center; gap: 12px;
+  transform: translateX(120%); animation: slideIn 0.3s forwards;
+}
+@keyframes slideIn { to { transform: translateX(0); } }
+
+/* ===== SYSTEM LOADING BLOCKER ===== */
+.loading-blocker {
+  position: fixed; inset: 0; background: rgba(28,16,8,0.85); z-index: 2000;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  color: white; gap: 20px; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+}
+.loading-blocker.active { opacity: 1; pointer-events: auto; }
+.spinner {
+  width: 50px; height: 50px; border: 4px solid rgba(255,255,255,0.2);
+  border-top-color: var(--gold); border-radius: 50%; animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ===== EMPTY PLACEHOLDERS ===== */
+.image-placeholder {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; background: #e8e2d5;
+  color: var(--gray); font-size: 0.8rem; gap: 8px; padding: 10px; text-align: center;
+}
+.image-placeholder i { font-size: 1.5rem; color: var(--gold); }
+</style>
+</head>
+<body>
+
+<div id="particles"></div>
+
+<header class="header">
+  <a href="#" class="logo">
+    <i class="fa-solid fa-gavel"></i>
+    <span>WeddingAlbum <em style="font-style:normal; color:var(--gold);">Pro</em></span>
+  </a>
+  <div class="top-actions">
+    <button class="action-btn secondary" onclick="addNewTextLayer()"><i class="fa-solid fa-plus"></i> Add Text</button>
+    <button class="action-btn secondary" onclick="triggerPhotoUpload()"><i class="fa-solid fa-image"></i> Add Photo</button>
+    <button class="action-btn primary" onclick="exportFullProjectZip()"><i class="fa-solid fa-download"></i> Export High-Res ZIP</button>
+  </div>
+</header>
+
+<main class="app-container">
+  
+  <aside class="sidebar">
+    <div class="sidebar-tabs">
+      <div class="tab-item active" data-target="presets-tab"><i class="fa-solid fa-layer-group"></i>Presets</div>
+      <div class="tab-item" data-target="text-tab"><i class="fa-solid fa-font"></i>Typography</div>
+      <div class="tab-item" data-target="photos-tab"><i class="fa-solid fa-wand-magic-sparkles"></i>Photo Framing</div>
+    </div>
+
+    <div class="sidebar-content active" id="presets-tab">
+      <div class="control-group">
+        <label class="control-label">Luxury Album Layout Templates</label>
+        <div class="preset-thumbs" id="templatesContainer">
+          </div>
+      </div>
+    </div>
+
+    <div class="sidebar-content" id="text-tab">
+      <div class="control-group">
+        <label class="control-label">Edit Active Text Layer</label>
+        <input type="text" id="textStringModifier" class="input-field" placeholder="Select a text layer to edit..." disabled>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">Premium Master Font Families</label>
+        <select id="textFontFamilySelector" class="input-field" disabled>
+          <option value="'Playfair Display', serif">Royal Playfair Serif</option>
+          <option value="'Cormorant Garamond', serif">Cormorant Vintage</option>
+          <option value="'Great Vibes', cursive">Great Vibes Luxury Calligraphy</option>
+          <option value="'Cinzel', serif">Cinzel Monumental Roman</option>
+          <option value="'Alex Brush', cursive">Alex Brush Fluid Elegance</option>
+          <option value="'Parisienne', cursive">Parisienne Chic Script</option>
+          <option value="'Pinyon Script', cursive">Pinyon Luxury Classic</option>
+          <option value="'Sacramento', cursive">Sacramento Fine Script</option>
+          <option value="'Poppins', sans-serif">Poppins Modern Minimalist</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">Dynamic Font Size Controls</label>
+        <div class="range-slider-container">
+          <input type="range" id="textSizeSlider" class="range-slider" min="10" max="180" value="32" disabled>
+          <span class="range-val" id="textSizeVal">32px</span>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">Layer Opacity Matrix</label>
+        <div class="range-slider-container">
+          <input type="range" id="textOpacitySlider" class="range-slider" min="10" max="100" value="100" disabled>
+          <span class="range-val" id="textOpacityVal">100%</span>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">Character Letter Spacing</label>
+        <div class="range-slider-container">
+          <input type="range" id="textTrackingSlider" class="range-slider" min="-5" max="30" value="0" disabled>
+          <span class="range-val" id="textTrackingVal">0px</span>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">True-Color Custom Paint Palette</label>
+        <input type="color" id="textColorHexEngine" class="input-field" style="height:45px; padding:2px;" disabled>
+        <div class="color-swatch-row">
+          <div class="swatch" style="background:#9b1a2f" onclick="applyQuickColor('#9b1a2f')"></div>
+          <div class="swatch" style="background:#c9a84c" onclick="applyQuickColor('#c9a84c')"></div>
+          <div class="swatch" style="background:#ffffff" onclick="applyQuickColor('#ffffff')"></div>
+          <div class="swatch" style="background:#1c1008" onclick="applyQuickColor('#1c1008')"></div>
+          <div class="swatch" style="background:#e8d08a" onclick="applyQuickColor('#e8d08a')"></div>
+          <div class="swatch" style="background:#f7edd6" onclick="applyQuickColor('#f7edd6')"></div>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">Premium Visual Text Style Presets</label>
+        <div class="style-list">
+          <div class="style-option" onclick="applyTextPresetStyle('royalGold')"><span>Royal Metallic Gold</span><i class="fa-solid fa-crown"></i></div>
+          <div class="style-option" onclick="applyTextPresetStyle('crimsonGlow')"><span>Crimson Deep Aura</span><i class="fa-solid fa-heart"></i></div>
+          <div class="style-option" onclick="applyTextPresetStyle('vintageLetterpress')"><span>Vintage Shadow Press</span><i class="fa-solid fa-print"></i></div>
+          <div class="style-option" onclick="applyTextPresetStyle('minimalClean')"><span>Minimal High Contrast</span><i class="fa-solid fa-circle"></i></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-content" id="photos-tab">
+      <div class="control-group">
+        <label class="control-label">Photo Design Geometric Frame Shapes</label>
+        <div class="design-grid">
+          <div class="design-chip active" data-shape="square" onclick="changeSelectedPhotoShape('square')">Sharp Grid</div>
+          <div class="design-chip" data-shape="soft" onclick="changeSelectedPhotoShape('soft')">Soft Edge</div>
+          <div class="design-chip" data-shape="oval" onclick="changeSelectedPhotoShape('oval')">Oval Arch</div>
+          <div class="design-chip" data-shape="circle" onclick="changeSelectedPhotoShape('circle')">Pure Circle</div>
+          <div class="design-chip" data-shape="diamond" onclick="changeSelectedPhotoShape('diamond')">Diamond Cut</div>
+          <div class="design-chip" data-shape="luxury" onclick="changeSelectedPhotoShape('luxury')">Royal Archway</div>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">Photo Frame Border Thickness</label>
+        <div class="range-slider-container">
+          <input type="range" id="photoBorderSlider" class="range-slider" min="0" max="25" value="2" disabled>
+          <span class="range-val" id="photoBorderVal">2px</span>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">Photo Frame Border Tint Color</label>
+        <input type="color" id="photoBorderColorEngine" class="input-field" style="height:45px; padding:2px;" value="#c9a84c" disabled>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">Photo Scale Level Factor</label>
+        <div class="range-slider-container">
+          <input type="range" id="photoScaleSlider" class="range-slider" min="50" max="200" value="100" disabled>
+          <span class="range-val" id="photoScaleVal">100%</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <section class="workspace">
+    <div class="canvas-wrapper" id="canvasFrameScaler">
+      <div class="album-canvas" id="masterWeddingCanvas">
+        </div>
+    </div>
+
+    <div class="canvas-toolbar">
+      <button class="tool-btn" title="Bring Element Forward" onclick="arrangeActiveLayer('up')"><i class="fa-solid fa-layer-group" style="transform: scaleY(-1);"></i></button>
+      <button class="tool-btn" title="Send Element Backward" onclick="arrangeActiveLayer('down')"><i class="fa-solid fa-layer-group"></i></button>
+      <button class="tool-btn" title="Duplicate Selected Element" onclick="duplicateActiveLayer()"><i class="fa-solid fa-clone"></i></button>
+      <button class="tool-btn" style="color:#d93838;" title="Delete Selected Layer" onclick="deleteActiveLayer()"><i class="fa-solid fa-trash-can"></i></button>
+    </div>
+  </section>
+
+</main>
+
+<input type="file" id="hiddenPhotoUploaderDeviceLink" accept="image/*" style="display: none;" onchange="handleDevicePhotoStreamLoad(event)">
+
+<div class="loading-blocker" id="globalAppLoadingModal">
+  <div class="spinner"></div>
+  <h3 id="globalAppLoadingStatusLabel" style="font-family: var(--font-serif); font-weight:400; letter-spacing:1px;">Assembling Design Elements...</h3>
+</div>
+
+<div id="toastBox"></div>
+
+<script>
+/**
+ * DYNAMIC ENGINE STATE SYSTEM REGISTRY
+ */
+let designTemplatesRegistry = [];
+let activeLayoutPresetIndex = 0;
+let compiledLayersArray = [];
+let targetedActiveLayerReference = null;
+let dragSystemIsActive = false;
+let dragPointerOriginX = 0;
+let dragPointerOriginY = 0;
+let layerElementOriginX = 0;
+let layerElementOriginY = 0;
+
+/**
+ * INITIALIZATION STARTUP ROUTINES
+ */
+document.addEventListener("DOMContentLoaded", () => {
+  generateLuxuryBackgroundParticles();
+  initializeTabNavigationModules();
+  compileMasterTemplatesRegistry();
+  renderTemplatePresetsThumbnails();
+  loadProjectTemplatePreset(0);
+  setupWorkspaceKeyboardListeners();
+  setupGlobalWorkspaceClickHandlers();
+});
+
+/**
+ * AMBIENT BACKGROUND FX PARTICLES SCHEDULER
+ */
+function generateLuxuryBackgroundParticles() {
+  const container = document.getElementById("particles");
+  const particleElementsList = ['✨', '🌸', '❤️', '💫', '💖', '🌷', '⚜️'];
+  for(let i = 0; i < 25; i++) {
+    const el = document.createElement("div");
+    el.className = "particle";
+    el.textContent = particleElementsList[Math.floor(Math.random() * particleElementsList.length)];
+    el.style.left = Math.random() * 100 + "%";
+    el.style.top = Math.random() * 100 + "%";
+    el.style.fontSize = (Math.random() * 0.8 + 0.7) + "rem";
+    el.style.animationDuration = (Math.random() * 15 + 15) + "s";
+    el.style.animationDelay = (Math.random() * -20) + "s";
+    container.appendChild(el);
+  }
+}
+
+/**
+ * INTERACTIVE NAVIGATION SYSTEM LOGIC HANDLERS
+ */
+function initializeTabNavigationModules() {
+  document.querySelectorAll(".tab-item").forEach(tab => {
+    tab.addEventListener("click", () => {
+      document.querySelectorAll(".tab-item").forEach(t => t.classList.remove("active"));
+      document.querySelectorAll(".sidebar-content").forEach(c => c.classList.remove("active"));
+      tab.classList.add("active");
+      document.getElementById(tab.dataset.target).classList.add("active");
+    });
+  });
+}
+
+/**
+ * DESIGN PRESET MASTER DATA SYSTEM MATRIX
+ */
+function compileMasterTemplatesRegistry() {
+  designTemplatesRegistry = [
+    {
+      id: "royal-classic",
+      name: "Royal Crimson & Gold Classic",
+      desc: "Traditional elegance with structural balance and ornamental luxury accents.",
+      bg: "linear-gradient(135deg, #1c0a12 0%, #3d0d1e 100%)",
+      layers: [
+        { id: "txt-1", type: "text", content: "The Wedding Album", x: 100, y: 80, size: 55, font: "'Playfair Display', serif", color: "#c9a84c", tracking: 3, opacity: 100, style: "royalGold" },
+        { id: "txt-2", type: "text", content: "CELEBRATING OUR ETERNAL LOVE", x: 105, y: 155, size: 14, font: "'Cinzel', serif", color: "#f7edd6", tracking: 6, opacity: 80, style: "minimalClean" },
+        { id: "img-1", type: "image", x: 100, y: 210, width: 360, height: 240, shape: "luxury", border: 3, borderColor: "#c9a84c", scale: 100 },
+        { id: "img-2", type: "image", x: 490, y: 210, width: 210, height: 240, shape: "soft", border: 2, borderColor: "#ffffff", scale: 100 }
+      ]
+    },
+    {
+      id: "modern-minimalist",
+      name: "Ivory Minimalist Grid Gallery",
+      desc: "Clean modern design focusing on asymmetric layouts with high contrast borders.",
+      bg: "#fcf9f2",
+      layers: [
+        { id: "txt-3", type: "text", content: "Together Forever", x: 50, y: 50, size: 42, font: "'Great Vibes', cursive", color: "#9b1a2f", tracking: 1, opacity: 100, style: "crimsonGlow" },
+        { id: "img-3", type: "image", x: 50, y: 130, width: 420, height: 320, shape: "square", border: 6, borderColor: "#ffffff", scale: 100 },
+        { id: "img-4", type: "image", x: 500, y: 50, width: 250, height: 180, shape: "square", border: 4, borderColor: "#ffffff", scale: 100 },
+        { id: "img-5", type: "image", x: 500, y: 250, width: 250, height: 200, shape: "soft", border: 4, borderColor: "#c9a84c", scale: 100 }
+      ]
+    },
+    {
+      id: "romantic-script",
+      name: "Deep Velvet Romance Suite",
+      desc: "High dramatic background contrast optimized with flowing calligraphic scripts.",
+      bg: "linear-gradient(145deg, #0f051d 0%, #290b23 100%)",
+      layers: [
+        { id: "txt-4", type: "text", content: "Vows under the Stars", x: 220, y: 40, size: 48, font: "'Parisienne', cursive", color: "#e8d08a", tracking: 2, opacity: 100, style: "royalGold" },
+        { id: "img-6", type: "image", x: 60, y: 130, width: 210, height: 310, shape: "oval", border: 2, borderColor: "#c9a84c", scale: 100 },
+        { id: "img-7", type: "image", x: 295, y: 130, width: 210, height: 310, shape: "oval", border: 2, borderColor: "#c9a84c", scale: 100 },
+        { id: "img-8", type: "image", x: 530, y: 130, width: 210, height: 310, shape: "oval", border: 2, borderColor: "#c9a84c", scale: 100 }
+      ]
+    },
+    {
+      id: "haldi-celebration",
+      name: "The Golden Haldi Festive Grid",
+      desc: "Vibrant yellow-gold palette layout ideal for capturing colorful pre-wedding rituals.",
+      bg: "linear-gradient(135deg, #382100 0%, #5e3a00 100%)",
+      layers: [
+        { id: "txt-5", type: "text", content: "The Golden Rituals", x: 80, y: 60, size: 46, font: "'Alex Brush', cursive", color: "#f7edd6", tracking: 2, opacity: 100, style: "royalGold" },
+        { id: "img-9", type: "image", x: 80, y: 150, width: 300, height: 280, shape: "circle", border: 4, borderColor: "#e8d08a", scale: 100 },
+        { id: "img-10", type: "image", x: 410, y: 150, width: 310, height: 130, shape: "soft", border: 2, borderColor: "#ffffff", scale: 100 },
+        { id: "img-11", type: "image", x: 410, y: 300, width: 310, height: 130, shape: "diamond", border: 2, borderColor: "#c9a84c", scale: 100 }
+      ]
+    },
+    {
+      id: "vintage-arches",
+      name: "Vintage Letterpress Arches Suite",
+      desc: "Rich dark cream card style texture with structural architectural framing blocks.",
+      bg: "#2b251d",
+      layers: [
+        { id: "txt-6", type: "text", content: "ETERNAL UNIONS", x: 240, y: 50, size: 28, font: "'Cinzel', serif", color: "#c9a84c", tracking: 10, opacity: 100, style: "vintageLetterpress" },
+        { id: "img-12", type: "image", x: 80, y: 120, width: 200, height: 320, shape: "luxury", border: 3, borderColor: "#c9a84c", scale: 100 },
+        { id: "img-13", type: "image", x: 300, y: 120, width: 200, height: 320, shape: "luxury", border: 3, borderColor: "#c9a84c", scale: 100 },
+        { id: "img-14", type: "image", x: 520, y: 120, width: 200, height: 320, shape: "luxury", border: 3, borderColor: "#c9a84c", scale: 100 }
+      ]
+    },
+    {
+      id: "royal-sangeet",
+      name: "Midnight Sangeet Starry Night",
+      desc: "Ethereal dark deep blues mixed with rich gold line work frames and modern text layouts.",
+      bg: "linear-gradient(135deg, #051026 0%, #122447 100%)",
+      layers: [
+        { id: "txt-7", type: "text", content: "Dance & Celebration", x: 180, y: 45, size: 45, font: "'Sacramento', cursive", color: "#ffffff", tracking: 3, opacity: 100, style: "royalGold" },
+        { id: "img-15", type: "image", x: 80, y: 130, width: 400, height: 300, shape: "soft", border: 4, borderColor: "#c9a84c", scale: 100 },
+        { id: "img-16", type: "image", x: 500, y: 130, width: 220, height: 140, shape: "square", border: 2, borderColor: "#ffffff", scale: 100 },
+        { id: "img-17", type: "image", x: 500, y: 290, width: 220, height: 140, shape: "circle", border: 2, borderColor: "#e8d08a", scale: 100 }
+      ]
+    }
+  ];
+}
+
+/**
+ * INTERFACE DESIGN BUILDER FOR PRESET CARDS
+ */
+function renderTemplatePresetsThumbnails() {
+  const container = document.getElementById("templatesContainer");
+  container.innerHTML = "";
+  
+  designTemplatesRegistry.forEach((tpl, idx) => {
+    const card = document.createElement("div");
+    card.className = `preset-card ${idx === activeLayoutPresetIndex ? 'active' : ''}`;
+    card.style.background = tpl.bg;
+    card.setAttribute("onclick", `loadProjectTemplatePreset(${idx})`);
+    
+    // Abstract wireframe indicator structures preview mini elements inside cards
+    let previewHTML = "";
+    tpl.layers.forEach(l => {
+      if(l.type === 'image') {
+        previewHTML += `<div style="position:absolute; width:${l.width/5}px; height:${l.height/5}px; left:${l.x/5}px; top:${l.y/5}px; background:rgba(255,255,255,0.25); border:1px solid rgba(255,255,255,0.4); border-radius:2px;"></div>`;
+      } else {
+        previewHTML += `<div style="position:absolute; left:${l.x/5}px; top:${l.y/5}px; width:40px; height:4px; background:rgba(201,168,76,0.5); border-radius:1px;"></div>`;
+      }
+    });
+    
+    card.innerHTML = `
+      ${previewHTML}
+      <div class="preset-meta">${tpl.name}</div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+/**
+ * COMPREHENSIVE COMPONENT LOADING ROUTINE ENGINE
+ */
+function loadProjectTemplatePreset(index) {
+  activeLayoutPresetIndex = index;
+  const targetTemplateData = designTemplatesRegistry[index];
+  
+  // Highlight targeted thumbnail preset node structure
+  document.querySelectorAll(".preset-card").forEach((c, idx) => {
+    c.classList.toggle("active", idx === index);
+  });
+  
+  const canvas = document.getElementById("masterWeddingCanvas");
+  canvas.innerHTML = "";
+  canvas.style.background = targetTemplateData.bg;
+  
+  // Deep clone layer matrix entities objects to decouple dynamic updates from static registry data
+  compiledLayersArray = JSON.parse(JSON.stringify(targetTemplateData.layers));
+  targetedActiveLayerReference = null;
+  
+  renderActiveCanvasElementsHierarchy();
+  resetControlInputsState();
+  pushNotificationToast(`Layout Loaded: ${targetTemplateData.name}`, "info");
+}
+
+/**
+ * GRAPHICAL RENDERING ENGINE LOOPS PIPELINE
+ */
+function renderActiveCanvasElementsHierarchy() {
+  const canvas = document.getElementById("masterWeddingCanvas");
+  
+  // Clear layout DOM elements while maintaining persistence references data structures intact
+  const activeIdsSelected = targetedActiveLayerReference ? targetedActiveLayerReference.id : null;
+  canvas.innerHTML = "";
+  
+  compiledLayersArray.forEach(layer => {
+    if(layer.type === "text") {
+      const textNode = document.createElement("div");
+      textNode.className = `layer-text ${activeIdsSelected === layer.id ? 'selected' : ''}`;
+      textNode.id = layer.id;
+      textNode.textContent = layer.content;
+      textNode.style.left = `${layer.x}px`;
+      textNode.style.top = `${layer.y}px`;
+      textNode.style.fontSize = `${layer.size}px`;
+      textNode.style.fontFamily = layer.font;
+      textNode.style.color = layer.color;
+      textNode.style.letterSpacing = `${layer.tracking}px`;
+      textNode.style.opacity = layer.opacity / 100;
+      
+      // Inject preset typography system design properties
+      applyTextNodeStyleStyles(textNode, layer.style);
+      
+      // Attach lifecycle interactive event listeners
+      textNode.addEventListener("mousedown", (e) => startInteractiveLayerDrag(e, layer));
+      textNode.addEventListener("click", (e) => { e.stopPropagation(); selectActiveLayerWorkspace(layer); });
+      
+      canvas.appendChild(textNode);
+    } 
+    else if(layer.type === "image") {
+      const imgContainer = document.createElement("div");
+      imgContainer.className = `layer-image-container ${activeIdsSelected === layer.id ? 'selected' : ''}`;
+      imgContainer.id = layer.id;
+      imgContainer.style.left = `${layer.x}px`;
+      imgContainer.style.top = `${layer.y}px`;
+      imgContainer.style.width = `${layer.width}px`;
+      imgContainer.style.height = `${layer.height}px`;
+      
+      // Apply clip shape frame rules configuration matrices 
+      applyGeometricShapeMasking(imgContainer, layer.shape);
+      
+      imgContainer.style.border = `${layer.border}px solid ${layer.borderColor || '#c9a84c'}`;
+      
+      if(layer.imageSrc) {
+        const imageDOM = document.createElement("img");
+        imageDOM.src = layer.imageSrc;
+        imageDOM.style.transform = `scale(${layer.scale / 100})`;
+        imgContainer.appendChild(imageDOM);
+      } else {
+        // Insert custom interactive wireframe upload placeholder container graphics
+        const placeholder = document.createElement("div");
+        placeholder.className = "image-placeholder";
+        placeholder.innerHTML = `
+          <i class="fa-solid fa-cloud-arrow-up"></i>
+          <span>Click Sidebar to Upload Photo</span>
+        `;
+        imgContainer.appendChild(placeholder);
+      }
+      
+      imgContainer.addEventListener("mousedown", (e) => startInteractiveLayerDrag(e, layer));
+      imgContainer.addEventListener("click", (e) => { e.stopPropagation(); selectActiveLayerWorkspace(layer); });
+      
+      canvas.appendChild(imgContainer);
+    }
+  });
+}
+
+/**
+ * GEOMETRIC MASKING CONFIGURATION ENGINE MATRIX
+ */
+function applyGeometricShapeMasking(container, shape) {
+  container.style.borderRadius = "0px";
+  container.style.clipPath = "none";
+  
+  switch(shape) {
+    case "soft":
+      container.style.borderRadius = "24px";
+      break;
+    case "oval":
+      container.style.borderRadius = "150px / 200px";
+      break;
+    case "circle":
+      container.style.borderRadius = "50%";
+      break;
+    case "diamond":
+      container.style.clipPath = "polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)";
+      break;
+    case "luxury":
+      container.style.borderRadius = "120px 120px 0 0";
+      break;
+    case "square":
+    default:
+      container.style.borderRadius = "0px";
+      break;
+  }
+}
+
+/**
+ * PRESET STYLES EMBEDDING LOGIC MATRIX
+ */
+function applyTextNodeStyleStyles(element, presetKey) {
+  element.style.textShadow = "none";
+  element.style.background = "none";
+  element.style.webkitBackgroundClip = "unset";
+  element.style.webkitTextFillColor = "unset";
+  
+  if(!presetKey) return;
+  
+  switch(presetKey) {
+    case "royalGold":
+      element.style.textShadow = "1px 1px 0px rgba(0,0,0,0.2), 0px 4px 10px rgba(201,168,76,0.3)";
+      break;
+    case "crimsonGlow":
+      element.style.textShadow = "0px 0px 15px rgba(155,26,47,0.6), 0px 2px 4px rgba(0,0,0,0.3)";
+      break;
+    case "vintageLetterpress":
+      element.style.textShadow = "1px 1px 1px #fff, -1px -1px 1px rgba(0,0,0,0.7)";
+      break;
+    case "minimalClean":
+      element.style.textShadow = "2px 2px 0px rgba(0,0,0,0.1)";
+      break;
+  }
+}
+
+/**
+ * INTERACTIVE COMPONENT DRAG PROCESSING ENGINE
+ */
+function startInteractiveLayerDrag(e, layer) {
+  // Lock focusing layer element targeting pointer actions paths
+  selectActiveLayerWorkspace(layer);
+  
+  dragSystemIsActive = true;
+  dragPointerOriginX = e.clientX;
+  dragPointerOriginY = e.clientY;
+  
+  layerElementOriginX = layer.x;
+  layerElementOriginY = layer.y;
+  
+  document.addEventListener("mousemove", executeLayerDragMovement);
+  document.addEventListener("mouseup", terminateLayerDragSequence);
+}
+
+function executeLayerDragMovement(e) {
+  if(!dragSystemIsActive || !targetedActiveLayerReference) return;
+  
+  const deltaX = e.clientX - dragPointerOriginX;
+  const deltaY = e.clientY - dragPointerOriginY;
+  
+  // Realtime coordinates transformation recalculation loops
+  targetedActiveLayerReference.x = layerElementOriginX + deltaX;
+  targetedActiveLayerReference.y = layerElementOriginY + deltaY;
+  
+  // Apply edge boundary clamping check structures to restrict design runaways
+  if(targetedActiveLayerReference.x < -100) targetedActiveLayerReference.x = -100;
+  if(targetedActiveLayerReference.y < -100) targetedActiveLayerReference.y = -100;
+  if(targetedActiveLayerReference.x > 800) targetedActiveLayerReference.x = 800;
+  if(targetedActiveLayerReference.y > 500) targetedActiveLayerReference.y = 500;
+  
+  // Map updating attributes onto targeted DOM nodes directly for maximum interactive layout rendering speed
+  const domNode = document.getElementById(targetedActiveLayerReference.id);
+  if(domNode) {
+    domNode.style.left = `${targetedActiveLayerReference.x}px`;
+    domNode.style.top = `${targetedActiveLayerReference.y}px`;
+  }
+}
+
+function terminateLayerDragSequence() {
+  dragSystemIsActive = false;
+  document.removeEventListener("mousemove", executeLayerDragMovement);
+  document.removeEventListener("mouseup", terminateLayerDragSequence);
+}
+
+/**
+ * SELECTION ROUTINES ENGINE MANAGER
+ */
+function selectActiveLayerWorkspace(layer) {
+  targetedActiveLayerReference = layer;
+  
+  // Redraw canvas state markers outline boxes cleanly without fracturing running loops state
+  document.querySelectorAll(".layer-text, .layer-image-container").forEach(el => {
+    el.classList.toggle("selected", el.id === layer.id);
+  });
+  
+  syncControlInputsStateWithTarget();
+}
+
+/**
+ * WORKSPACE STATE USER INTERFACE SYNC MATRIX
+ */
+function syncControlInputsStateWithTarget() {
+  if(!targetedActiveLayerReference) {
+    resetControlInputsState();
+    return;
+  }
+  
+  if(targetedActiveLayerReference.type === "text") {
+    // Route active tab focus properties paths inside side menus smoothly
+    switchSidebarControlTabPanel("text-tab");
+    
+    const textStr = document.getElementById("textStringModifier");
+    const fontSel = document.getElementById("textFontFamilySelector");
+    const sizeSld = document.getElementById("textSizeSlider");
+    const opcSld = document.getElementById("textOpacitySlider");
+    const trkSld = document.getElementById("textTrackingSlider");
+    const colHex = document.getElementById("textColorHexEngine");
+    
+    textStr.disabled = false; textStr.value = targetedActiveLayerReference.content;
+    fontSel.disabled = false; fontSel.value = targetedActiveLayerReference.font;
+    sizeSld.disabled = false; sizeSld.value = targetedActiveLayerReference.size;
+    opcSld.disabled = false; opcSld.value = targetedActiveLayerReference.opacity;
+    trkSld.disabled = false; trkSld.value = targetedActiveLayerReference.tracking;
+    colHex.disabled = false; colHex.value = targetedActiveLayerReference.color;
+    
+    document.getElementById("textSizeVal").textContent = `${targetedActiveLayerReference.size}px`;
+    document.getElementById("textOpacityVal").textContent = `${targetedActiveLayerReference.opacity}%`;
+    document.getElementById("textTrackingVal").textContent = `${targetedActiveLayerReference.tracking}px`;
+    
+    // Wire up direct real-time hardware transformation event input processing listeners pipelines
+    setupTextControlBindingListeners(true);
+  } 
+  else if(targetedActiveLayerReference.type === "image") {
+    switchSidebarControlTabPanel("photos-tab");
+    
+    const borderSld = document.getElementById("photoBorderSlider");
+    const borderColorHex = document.getElementById("photoBorderColorEngine");
+    const scaleSld = document.getElementById("photoScaleSlider");
+    
+    borderSld.disabled = false; borderSld.value = targetedActiveLayerReference.border;
+    borderColorHex.disabled = false; borderColorHex.value = targetedActiveLayerReference.borderColor || "#c9a84c";
+    scaleSld.disabled = false; scaleSld.value = targetedActiveLayerReference.scale;
+    
+    document.getElementById("photoBorderVal").textContent = `${targetedActiveLayerReference.border}px`;
+    document.getElementById("photoScaleVal").textContent = `${targetedActiveLayerReference.scale}%`;
+    
+    // Highlight currently chosen geometry frame chip component node element layout
+    document.querySelectorAll(".design-chip").forEach(chip => {
+      chip.classList.toggle("active", chip.dataset.shape === targetedActiveLayerReference.shape);
+    });
+    
+    setupPhotoControlBindingListeners(true);
+  }
+}
+
+function switchSidebarControlTabPanel(tabId) {
+  document.querySelectorAll(".tab-item").forEach(t => {
+    t.classList.toggle("active", t.dataset.target === tabId);
+  });
+  document.querySelectorAll(".sidebar-content").forEach(c => {
+    c.classList.toggle("active", c.id === tabId);
+  });
+}
+
+function resetControlInputsState() {
+  // Deactivate input components paths elements safely to block interface corruptions risks
+  const textStr = document.getElementById("textStringModifier");
+  const fontSel = document.getElementById("textFontFamilySelector");
+  const sizeSld = document.getElementById("textSizeSlider");
+  const opcSld = document.getElementById("textOpacitySlider");
+  const trkSld = document.getElementById("textTrackingSlider");
+  const colHex = document.getElementById("textColorHexEngine");
+  
+  textStr.disabled = true; textStr.value = "";
+  fontSel.disabled = true;
+  sizeSld.disabled = true;
+  opcSld.disabled = true;
+  trkSld.disabled = true;
+  colHex.disabled = true;
+  
+  const borderSld = document.getElementById("photoBorderSlider");
+  const borderColorHex = document.getElementById("photoBorderColorEngine");
+  const scaleSld = document.getElementById("photoScaleSlider");
+  
+  borderSld.disabled = true;
+  borderColorHex.disabled = true;
+  scaleSld.disabled = true;
+  
+  setupTextControlBindingListeners(false);
+  setupPhotoControlBindingListeners(false);
+}
+
+/**
+ * HARDWARE AND DATA STREAMS EVENT BINDINGS PIPELINES
+ */
+function setupTextControlBindingListeners(attachActive) {
+  const textStr = document.getElementById("textStringModifier");
+  const fontSel = document.getElementById("textFontFamilySelector");
+  const sizeSld = document.getElementById("textSizeSlider");
+  const opcSld = document.getElementById("textOpacitySlider");
+  const trkSld = document.getElementById("textTrackingSlider");
+  const colHex = document.getElementById("textColorHexEngine");
+  
+  // Flush previous listeners structures by cloning properties nodes structures layout patterns
+  if(!attachActive) return;
+  
+  textStr.oninput = (e) => {
+    if(!targetedActiveLayerReference) return;
+    targetedActiveLayerReference.content = e.target.value;
+    const node = document.getElementById(targetedActiveLayerReference.id);
+    if(node) node.textContent = e.target.value;
+  };
+  
+  fontSel.onchange = (e) => {
+    if(!targetedActiveLayerReference) return;
+    targetedActiveLayerReference.font = e.target.value;
+    const node = document.getElementById(targetedActiveLayerReference.id);
+    if(node) node.style.fontFamily = e.target.value;
+  };
+  
+  sizeSld.oninput = (e) => {
+    if(!targetedActiveLayerReference) return;
+    targetedActiveLayerReference.size = parseInt(e.target.value);
+    document.getElementById("textSizeVal").textContent = `${e.target.value}px`;
+    const node = document.getElementById(targetedActiveLayerReference.id);
+    if(node) node.style.fontSize = `${e.target.value}px`;
+  };
+  
+  opcSld.oninput = (e) => {
+    if(!targetedActiveLayerReference) return;
+    targetedActiveLayerReference.opacity = parseInt(e.target.value);
+    document.getElementById("textOpacityVal").textContent = `${e.target.value}%`;
+    const node = document.getElementById(targetedActiveLayerReference.id);
+    if(node) node.style.opacity = e.target.value / 100;
+  };
+  
+  trkSld.oninput = (e) => {
+    if(!targetedActiveLayerReference) return;
+    targetedActiveLayerReference.tracking = parseInt(e.target.value);
+    document.getElementById("textTrackingVal").textContent = `${e.target.value}px`;
+    const node = document.getElementById(targetedActiveLayerReference.id);
+    if(node) node.style.letterSpacing = `${e.target.value}px`;
+  };
+  
+  colHex.oninput = (e) => {
+    if(!targetedActiveLayerReference) return;
+    targetedActiveLayerReference.color = e.target.value;
+    const node = document.getElementById(targetedActiveLayerReference.id);
+    if(node) node.style.color = e.target.value;
+  };
+}
+
+function setupPhotoControlBindingListeners(attachActive) {
+  const borderSld = document.getElementById("photoBorderSlider");
+  const borderColorHex = document.getElementById("photoBorderColorEngine");
+  const scaleSld = document.getElementById("photoScaleSlider");
+  
+  if(!attachActive) return;
+  
+  borderSld.oninput = (e) => {
+    if(!targetedActiveLayerReference) return;
+    targetedActiveLayerReference.border = parseInt(e.target.value);
+    document.getElementById("photoBorderVal").textContent = `${e.target.value}px`;
+    const node = document.getElementById(targetedActiveLayerReference.id);
+    if(node) node.style.borderWidth = `${e.target.value}px`;
+  };
+  
+  borderColorHex.oninput = (e) => {
+    if(!targetedActiveLayerReference) return;
+    targetedActiveLayerReference.borderColor = e.target.value;
+    const node = document.getElementById(targetedActiveLayerReference.id);
+    if(node) node.style.borderColor = e.target.value;
+  };
+  
+  scaleSld.oninput = (e) => {
+    if(!targetedActiveLayerReference) return;
+    targetedActiveLayerReference.scale = parseInt(e.target.value);
+    document.getElementById("photoScaleVal").textContent = `${e.target.value}%`;
+    const node = document.getElementById(targetedActiveLayerReference.id);
+    if(node) {
+      const img = node.querySelector("img");
+      if(img) img.style.transform = `scale(${e.target.value / 100})`;
+    }
+  };
+}
+
+/**
+ * PALETTE LAYER AUXILIARY SHORTCUT HELPER MODULES
+ */
+function applyQuickColor(hexCode) {
+  if(!targetedActiveLayerReference || targetedActiveLayerReference.type !== "text") return;
+  targetedActiveLayerReference.color = hexCode;
+  document.getElementById("textColorHexEngine").value = hexCode;
+  const node = document.getElementById(targetedActiveLayerReference.id);
+  if(node) node.style.color = hexCode;
+}
+
+function applyTextPresetStyle(styleKey) {
+  if(!targetedActiveLayerReference || targetedActiveLayerReference.type !== "text") return;
+  targetedActiveLayerReference.style = styleKey;
+  const node = document.getElementById(targetedActiveLayerReference.id);
+  if(node) applyTextNodeStyleStyles(node, styleKey);
+  pushNotificationToast(`Applied Style Pattern: ${styleKey}`, "success");
+}
+
+function changeSelectedPhotoShape(shapeKey) {
+  if(!targetedActiveLayerReference || targetedActiveLayerReference.type !== "image") return;
+  targetedActiveLayerReference.shape = shapeKey;
+  
+  document.querySelectorAll(".design-chip").forEach(chip => {
+    chip.classList.toggle("active", chip.dataset.shape === shapeKey);
+  });
+  
+  const node = document.getElementById(targetedActiveLayerReference.id);
+  if(node) applyGeometricShapeMasking(node, shapeKey);
+}
+
+/**
+ * RUNTIME LAYER ELEMENT FACTORY MODIFICATION GENERATORS
+ */
+function addNewTextLayer() {
+  const generatedId = `custom-txt-${Date.now()}`;
+  const freshTextLayerObject = {
+    id: generatedId,
+    type: "text",
+    content: "Edit Nuptial Text",
+    x: 200,
+    y: 200,
+    size: 36,
+    font: "'Playfair Display', serif",
+    color: "#c9a84c",
+    tracking: 1,
+    opacity: 100,
+    style: "royalGold"
+  };
+  
+  compiledLayersArray.push(freshTextLayerObject);
+  renderActiveCanvasElementsHierarchy();
+  selectActiveLayerWorkspace(freshTextLayerObject);
+  pushNotificationToast("New Typography Text Layer Planted", "success");
+}
+
+function triggerPhotoUpload() {
+  if(!targetedActiveLayerReference || targetedActiveLayerReference.type !== "image") {
+    // Generate new blank container image frame directly on matrix workspace automatically
+    const generatedId = `custom-img-${Date.now()}`;
+    const freshImageLayerObject = {
+      id: generatedId,
+      type: "image",
+      x: 150,
+      y: 150,
+      width: 300,
+      height: 200,
+      shape: "square",
+      border: 3,
+      borderColor: "#ffffff",
+      scale: 100
+    };
+    compiledLayersArray.push(freshImageLayerObject);
+    renderActiveCanvasElementsHierarchy();
+    selectActiveLayerWorkspace(freshImageLayerObject);
+  }
+  
+  // Programmatically trigger binary media device streams browser link input element file prompt
+  document.getElementById("hiddenPhotoUploaderDeviceLink").click();
+}
+
+function handleDevicePhotoStreamLoad(event) {
+  const SelectedFileHandle = event.target.files[0];
+  if(!SelectedFileHandle || !targetedActiveLayerReference || targetedActiveLayerReference.type !== "image") return;
+  
+  const dataStreamReader = new FileReader();
+  showGlobalAppModalSpinner("Encoding Media Stream Buffers...");
+  
+  dataStreamReader.onload = (fileLoadedEvent) => {
+    targetedActiveLayerReference.imageSrc = fileLoadedEvent.target.result;
+    renderActiveCanvasElementsHierarchy();
+    hideGlobalAppModalSpinner();
+    pushNotificationToast("Photo Upload Stream Succeeded Base64 Loaded", "success");
+  };
+  
+  dataStreamReader.readAsDataURL(SelectedFileHandle);
+}
+
+/**
+ * ENGINE Z-INDEX LAYER POSITION DEPTH MATRIX TRANSFORMATIONS
+ */
+function arrangeActiveLayer(direction) {
+  if(!targetedActiveLayerReference) return;
+  const targetIndex = compiledLayersArray.findIndex(l => l.id === targetedActiveLayerReference.id);
+  
+  if(direction === "up" && targetIndex < compiledLayersArray.length - 1) {
+    // Swap element nodes positions elements up vector
+    const swapTemp = compiledLayersArray[targetIndex];
+    compiledLayersArray[targetIndex] = compiledLayersArray[targetIndex + 1];
+    compiledLayersArray[targetIndex + 1] = swapTemp;
+  } 
+  else if(direction === "down" && targetIndex > 0) {
+    const swapTemp = compiledLayersArray[targetIndex];
+    compiledLayersArray[targetIndex] = compiledLayersArray[targetIndex - 1];
+    compiledLayersArray[targetIndex - 1] = swapTemp;
+  }
+  
+  renderActiveCanvasElementsHierarchy();
+}
+
+function duplicateActiveLayer() {
+  if(!targetedActiveLayerReference) return;
+  const baseCopiedLayer = JSON.parse(JSON.stringify(targetedActiveLayerReference));
+  baseCopiedLayer.id = `cloned-layer-${Date.now()}`;
+  baseCopiedLayer.x += 35; // Cascade offset positioning rule modifications
+  baseCopiedLayer.y += 35;
+  
+  compiledLayersArray.push(baseCopiedLayer);
+  renderActiveCanvasElementsHierarchy();
+  selectActiveLayerWorkspace(baseCopiedLayer);
+  pushNotificationToast("Duplicated Selected Layer Element Matrix", "info");
+}
+
+function deleteActiveLayer() {
+  if(!targetedActiveLayerReference) return;
+  compiledLayersArray = compiledLayersArray.filter(l => l.id !== targetedActiveLayerReference.id);
+  targetedActiveLayerReference = null;
+  renderActiveCanvasElementsHierarchy();
+  resetControlInputsState();
+  pushNotificationToast("Target Layer Element Extinguished From Core Canvas", "error");
+}
+
+/**
+ * KEYBOARD INTERCEPT SHORTCUT ARCHITECTURE LISTENERS
+ */
+function setupWorkspaceKeyboardListeners() {
+  document.addEventListener("keydown", (e) => {
+    if(!targetedActiveLayerReference) return;
+    
+    // Ignore updates if user focus paths currently rest within text modifier inputs engines
+    if(document.activeElement.id === "textStringModifier") return;
+    
+    const transformationShiftSpeed = e.shiftKey ? 10 : 1;
+    
+    switch(e.key) {
+      case "ArrowUp":
+        e.preventDefault(); targetedActiveLayerReference.y -= transformationShiftSpeed; break;
+      case "ArrowDown":
+        e.preventDefault(); targetedActiveLayerReference.y += transformationShiftSpeed; break;
+      case "ArrowLeft":
+        e.preventDefault(); targetedActiveLayerReference.x -= transformationShiftSpeed; break;
+      case "ArrowRight":
+        e.preventDefault(); targetedActiveLayerReference.x += transformationShiftSpeed; break;
+      case "Delete":
+      case "Backspace":
+        deleteActiveLayer(); break;
+      default:
+        return;
+    }
+    
+    // Direct live DOM updates loop maps positions markers quickly without fracturing pipeline streams
+    const domNode = document.getElementById(targetedActiveLayerReference.id);
+    if(domNode) {
+      domNode.style.left = `${targetedActiveLayerReference.x}px`;
+      domNode.style.top = `${targetedActiveLayerReference.y}px`;
+    }
+  });
+}
+
+function setupGlobalWorkspaceClickHandlers() {
+  document.getElementById("masterWeddingCanvas").addEventListener("click", () => {
+    // Clear selections tracking safely when clicking outer boundary zones layers environments
+    targetedActiveLayerReference = null;
+    document.querySelectorAll(".layer-text, .layer-image-container").forEach(el => el.classList.remove("selected"));
+    resetControlInputsState();
+  });
+}
+
+/**
+ * HIGH RESOLUTION ZIP PACKAGING AND EXPORT ENGINE PIPELINE
+ */
+async function exportFullProjectZip() {
+  // Deselect active markers tags layer pointers ahead of high res graphics capture layer operations
+  const transientBackupTargetRef = targetedActiveLayerReference;
+  targetedActiveLayerReference = null;
+  document.querySelectorAll(".layer-text, .layer-image-container").forEach(el => el.classList.remove("selected"));
+  resetControlInputsState();
+  
+  showGlobalAppModalSpinner("Rendering Canvas Graphics Matrix Layers...");
+  
+  try {
+    const rawTargetViewportNode = document.getElementById("masterWeddingCanvas");
+    
+    // Execute html2canvas rendering sequence stream transformations matrix data loops pipeline
+    const highResCanvasMatrixOutput = await html2canvas(rawTargetViewportNode, {
+      scale: 3, // Upscale canvas 300% to generate print layout level assets
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: null,
+      logging: false
+    });
+    
+    const binaryBase64PNGDataURLString = highResCanvasMatrixOutput.toDataURL("image/png");
+    const rawCleanBase64StreamBytesString = binaryBase64PNGDataURLString.split(',')[1];
+    
+    showGlobalAppModalSpinner("Assembling PDF Vector Asset Modules...");
+    
+    // Compile vector based matching PDF structural print sheets
+    const { jsPDF } = window.jspdf;
+    const documentPDFEngineInstance = new jsPDF({
+      orientation: 'landscape',
+      unit: 'in',
+      format: [11, 8.5] // Standard Letter Landscape Profile Layout Format Sheets Spec
+    });
+    
+    documentPDFEngineInstance.addImage(binaryBase64PNGDataURLString, 'PNG', 0, 0, 11, 8.5);
+    const completedPDFBinaryArrayBufferBlobData = documentPDFEngineInstance.output('arraybuffer');
+    
+    showGlobalAppModalSpinner("Compiling High-Speed Compression ZIP Archive Packages...");
+    
+    // Initialize JSZip dynamic files archiving array container
+    const zipArchiveInstance = new JSZip();
+    const currentUniqueFileTimestampCode = Date.now();
+    
+    zipArchiveInstance.file(`wedding-album-sheet-${currentUniqueFileTimestampCode}.png`, rawCleanBase64StreamBytesString, { base64: true });
+    zipArchiveInstance.file(`wedding-album-print-${currentUniqueFileTimestampCode}.pdf`, completedPDFBinaryArrayBufferBlobData);
+    
+    // Compress and build download trigger browser pipeline vectors links
+    const finalizedZipBlobOutputPayload = await zipArchiveInstance.generateAsync({ type: 'blob' });
+    saveAs(finalizedZipBlobOutputPayload, `weddingcraft-pro-export-${currentUniqueFileTimestampCode}.zip`);
+    
+    pushNotificationToast("ZIP Archive Package Download Initialized Successfully!", "success");
+  } 
+  catch(systemCriticalRenderError) {
+    console.error(systemCriticalRenderError);
+    pushNotificationToast("Critical Conflict Triggered During High-Res Pipeline Export Compilation Layers.", "error");
+  }
+  finally {
+    hideGlobalAppModalSpinner();
+    // Re-engage target focus layer indicators configurations accurately back into runtime framework
+    if(transientBackupTargetRef) {
+      selectActiveLayerWorkspace(transientBackupTargetRef);
+    }
+  }
+}
+
+/**
+ * MODAL DIALOG DISPLAY CONTROL DRIVERS
+ */
+function showGlobalAppModalSpinner(statusTextMsg) {
+  const label = document.getElementById("globalAppLoadingStatusLabel");
+  const modal = document.getElementById("globalAppLoadingModal");
+  if(label) label.textContent = statusTextMsg || "Processing Operation Pipeline Layer Matrix...";
+  if(modal) modal.classList.add("active");
+}
+
+function hideGlobalAppModalSpinner() {
+  const modal = document.getElementById("globalAppLoadingModal");
+  if(modal) modal.classList.remove("active");
+}
+
+/**
+ * TOAST NOTIFICATIONS PIPELINE MANAGER DISPATCHER
+ */
+function pushNotificationToast(messageText, notificationType = "info") {
+  const box = document.getElementById("toastBox");
+  const dynamicToastNode = document.createElement("div");
+  
+  let iconGraphicMarkupStr = "fa-info-circle";
+  if(notificationType === "success") {
+    dynamicToastNode.style.borderLeftColor = "#c9a84c";
+    iconGraphicMarkupStr = "fa-circle-check";
+  } else if(notificationType === "error") {
+    dynamicToastNode.style.borderLeftColor = "#e63946";
+    iconGraphicMarkupStr = "fa-triangle-exclamation";
+  }
+  
+  dynamicToastNode.className = `toast`;
+  dynamicToastNode.innerHTML = `
+    <i class="fa-solid ${iconGraphicMarkupStr}" style="color: inherit;"></i>
+    <span>${messageText}</span>
+  `;
+  
+  box.appendChild(dynamicToastNode);
+  
+  // Garbage collection scheduling pipeline layer cycles
+  setTimeout(() => {
+    dynamicToastNode.style.animation = "slideIn 0.3s reverse forwards";
+    setTimeout(() => dynamicToastNode.remove(), 300);
+  }, 4000);
+}
+</script>
+</body>
+</html>
